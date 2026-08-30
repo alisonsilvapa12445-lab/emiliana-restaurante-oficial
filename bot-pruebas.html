@@ -1,0 +1,1447 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    >
+    <title>Laboratorio del Bot | Emiliana</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --wine: #78283d;
+        --wine-dark: #571b2c;
+        --gold: #c99334;
+        --cream: #fff9f0;
+        --paper: #ffffff;
+        --ink: #2d211b;
+        --muted: #6e625a;
+        --line: #eadac8;
+        --green: #17724b;
+        --green-soft: #e8f7ef;
+        --red: #ad2b26;
+        --red-soft: #fff0ee;
+        --blue: #285eaa;
+        --shadow: 0 24px 70px rgba(72, 39, 25, 0.13);
+        --radius: 24px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-width: 320px;
+        background: #f5eadc;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 8% 4%, rgba(201, 147, 52, 0.19), transparent 27rem),
+          radial-gradient(circle at 94% 92%, rgba(120, 40, 61, 0.12), transparent 30rem),
+          linear-gradient(145deg, #fffaf3 0%, #f2e3d1 100%);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .shell {
+        width: min(1240px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 42px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.66);
+        border-radius: 16px;
+        color: #fff;
+        background: linear-gradient(145deg, var(--wine), var(--wine-dark));
+        box-shadow: 0 10px 24px rgba(120, 40, 61, 0.24);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 29px;
+        font-weight: 700;
+      }
+
+      .brand-copy small {
+        display: block;
+        color: var(--wine);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .brand-copy strong {
+        display: block;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(21px, 3vw, 29px);
+        line-height: 1.05;
+      }
+
+      .top-status {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .pill {
+        display: inline-flex;
+        min-height: 34px;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border: 1px solid rgba(23, 114, 75, 0.19);
+        border-radius: 999px;
+        color: var(--green);
+        background: rgba(232, 247, 239, 0.86);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+      }
+
+      .pill::before {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+        content: "";
+        box-shadow: 0 0 0 4px rgba(23, 114, 75, 0.1);
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(250px, 340px) minmax(0, 1fr);
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      .safety-panel,
+      .chat {
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .safety-panel {
+        display: flex;
+        min-height: 690px;
+        flex-direction: column;
+        padding: 26px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--wine);
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .safety-panel h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(28px, 3.4vw, 43px);
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        line-height: 1.04;
+      }
+
+      .lead {
+        margin: 14px 0 22px;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .zero-card {
+        padding: 18px;
+        border: 1px solid rgba(23, 114, 75, 0.16);
+        border-radius: 19px;
+        background: linear-gradient(145deg, #f0fbf5, #e7f6ee);
+      }
+
+      .zero-card strong {
+        display: block;
+        color: var(--green);
+        font-size: 20px;
+      }
+
+      .zero-card span {
+        display: block;
+        margin-top: 3px;
+        color: #466558;
+        font-size: 13px;
+      }
+
+      .checklist {
+        display: grid;
+        gap: 12px;
+        margin: 22px 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .checklist li {
+        display: grid;
+        grid-template-columns: 25px 1fr;
+        gap: 10px;
+        align-items: start;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .check {
+        display: grid;
+        width: 23px;
+        height: 23px;
+        place-items: center;
+        border-radius: 8px;
+        color: var(--green);
+        background: var(--green-soft);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .testing-note {
+        margin-top: auto;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .reset-button {
+        width: 100%;
+        min-height: 45px;
+        margin-top: 13px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        color: var(--wine);
+        background: #fff;
+        cursor: pointer;
+        font-weight: 800;
+        transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+      }
+
+      .reset-button:hover {
+        border-color: rgba(120, 40, 61, 0.42);
+        box-shadow: 0 8px 18px rgba(76, 38, 24, 0.08);
+        transform: translateY(-1px);
+      }
+
+      .chat {
+        display: grid;
+        min-height: 690px;
+        grid-template-rows: auto minmax(230px, 1fr) auto auto;
+        overflow: hidden;
+        background: rgba(255, 252, 247, 0.94);
+      }
+
+      .chat-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 18px 21px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .assistant-id {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+
+      .assistant-avatar {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 14px;
+        color: #fff;
+        background: var(--wine);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 23px;
+        font-weight: 700;
+      }
+
+      .assistant-id strong,
+      .assistant-id span {
+        display: block;
+      }
+
+      .assistant-id strong {
+        font-size: 14px;
+      }
+
+      .assistant-id span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .network-lock {
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 800;
+        text-align: right;
+      }
+
+      .messages {
+        display: flex;
+        min-height: 0;
+        flex-direction: column;
+        gap: 14px;
+        overflow-y: auto;
+        padding: 24px clamp(16px, 4vw, 34px);
+        scroll-behavior: smooth;
+      }
+
+      .message {
+        display: flex;
+        max-width: min(88%, 620px);
+        gap: 9px;
+        align-items: flex-end;
+        animation: rise 180ms ease-out;
+      }
+
+      .message--user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+      }
+
+      .message-avatar {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 10px;
+        color: var(--wine);
+        background: #f3e4d5;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .message--user .message-avatar {
+        color: #fff;
+        background: var(--wine);
+        font-family: inherit;
+        font-size: 11px;
+      }
+
+      .bubble {
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 18px 18px 18px 5px;
+        background: #fff;
+        box-shadow: 0 7px 18px rgba(65, 40, 27, 0.06);
+        font-size: 14px;
+      }
+
+      .message--user .bubble {
+        border-color: var(--wine);
+        border-radius: 18px 18px 5px 18px;
+        color: #fff;
+        background: var(--wine);
+      }
+
+      .bubble strong {
+        color: var(--wine);
+      }
+
+      .message--user .bubble strong {
+        color: #fff;
+      }
+
+      .interactive {
+        padding: 0 clamp(16px, 4vw, 34px) 18px;
+      }
+
+      .card {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(67, 39, 24, 0.08);
+        animation: rise 200ms ease-out;
+      }
+
+      .card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 21px;
+        line-height: 1.15;
+      }
+
+      .card-description {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .step-badge {
+        flex: 0 0 auto;
+        padding: 5px 9px;
+        border-radius: 999px;
+        color: var(--wine);
+        background: #f7e9e6;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .progress {
+        height: 5px;
+        margin: -4px 0 18px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #eee2d6;
+      }
+
+      .progress span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--wine), var(--gold));
+        transition: width 180ms ease;
+      }
+
+      .quick-grid,
+      .topic-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .choice {
+        min-height: 64px;
+        padding: 13px 14px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        color: var(--ink);
+        background: #fffdf9;
+        cursor: pointer;
+        font-weight: 800;
+        text-align: left;
+        transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+      }
+
+      .choice small {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .choice:hover {
+        border-color: rgba(120, 40, 61, 0.43);
+        background: #fff8f2;
+        transform: translateY(-1px);
+      }
+
+      .choice:focus-visible,
+      .button:focus-visible,
+      .reset-button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid rgba(40, 94, 170, 0.35);
+        outline-offset: 2px;
+      }
+
+      .fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      .field--full {
+        grid-column: 1 / -1;
+      }
+
+      .field label {
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .field label span {
+        color: var(--red);
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        min-height: 45px;
+        border: 1px solid #dcc8b5;
+        border-radius: 13px;
+        color: var(--ink);
+        background: #fff;
+        padding: 10px 12px;
+      }
+
+      .field textarea {
+        min-height: 84px;
+        resize: vertical;
+      }
+
+      .field-help {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .error {
+        min-height: 18px;
+        margin: 10px 0 0;
+        color: var(--red);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 9px;
+        margin-top: 17px;
+      }
+
+      .button {
+        min-height: 44px;
+        padding: 10px 16px;
+        border: 1px solid transparent;
+        border-radius: 13px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 850;
+        transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .button--primary {
+        color: #fff;
+        background: var(--wine);
+        box-shadow: 0 8px 18px rgba(120, 40, 61, 0.2);
+      }
+
+      .button--primary:hover {
+        background: var(--wine-dark);
+      }
+
+      .button--secondary {
+        border-color: var(--line);
+        color: var(--wine);
+        background: #fff;
+      }
+
+      .button--danger {
+        color: #fff;
+        background: var(--red);
+      }
+
+      .summary {
+        display: grid;
+        gap: 0;
+        margin: 4px 0 0;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        overflow: hidden;
+      }
+
+      .summary-row {
+        display: grid;
+        grid-template-columns: minmax(115px, 0.7fr) 1.3fr;
+        gap: 12px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+      }
+
+      .summary-row:last-child {
+        border-bottom: 0;
+      }
+
+      .summary-row span:first-child {
+        color: var(--muted);
+        font-weight: 750;
+      }
+
+      .summary-row span:last-child {
+        overflow-wrap: anywhere;
+        font-weight: 800;
+      }
+
+      .demo-notice,
+      .success-box,
+      .danger-box {
+        margin-top: 14px;
+        padding: 13px 14px;
+        border-radius: 14px;
+        font-size: 12px;
+      }
+
+      .demo-notice {
+        border: 1px solid rgba(40, 94, 170, 0.15);
+        color: #365675;
+        background: #eef5ff;
+      }
+
+      .success-box {
+        border: 1px solid rgba(23, 114, 75, 0.18);
+        color: #315e4a;
+        background: var(--green-soft);
+      }
+
+      .success-box strong {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--green);
+        font-size: 14px;
+      }
+
+      .danger-box {
+        border: 1px solid rgba(173, 43, 38, 0.16);
+        color: #70413e;
+        background: var(--red-soft);
+      }
+
+      .chat-foot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 8px 16px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.82);
+        font-size: 11px;
+        text-align: center;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+
+        .safety-panel {
+          min-height: auto;
+        }
+
+        .testing-note {
+          margin-top: 5px;
+        }
+
+        .chat {
+          min-height: 720px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .shell {
+          width: min(100% - 18px, 1240px);
+          padding-top: 15px;
+        }
+
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .top-status {
+          justify-content: flex-start;
+        }
+
+        .safety-panel {
+          padding: 21px;
+        }
+
+        .chat-head {
+          padding: 14px;
+        }
+
+        .network-lock {
+          max-width: 95px;
+        }
+
+        .message {
+          max-width: 95%;
+        }
+
+        .quick-grid,
+        .topic-grid,
+        .fields {
+          grid-template-columns: 1fr;
+        }
+
+        .field--full {
+          grid-column: auto;
+        }
+
+        .card {
+          padding: 16px;
+        }
+
+        .actions {
+          align-items: stretch;
+          flex-direction: column-reverse;
+        }
+
+        .button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand" aria-label="Emiliana Buffet">
+          <div class="brand-mark" aria-hidden="true">E</div>
+          <div class="brand-copy">
+            <small>Buffet cultural · Cusco</small>
+            <strong>Emiliana</strong>
+          </div>
+        </div>
+        <div class="top-status" aria-label="Estado de la prueba">
+          <span class="pill">Modo demostración</span>
+          <span class="pill">Consumo de IA: S/ 0</span>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="Laboratorio del bot">
+        <aside class="safety-panel">
+          <p class="eyebrow">Laboratorio protegido</p>
+          <h1>Prueba el bot sin gastar IA.</h1>
+          <p class="lead">
+            Recorre los cuadros, completa datos ficticios y prueba confirmaciones.
+            Esta página funciona completamente dentro de tu navegador.
+          </p>
+
+          <div class="zero-card">
+            <strong>S/ 0 en OpenAI</strong>
+            <span>No existe ninguna conexión con la API de inteligencia artificial.</span>
+          </div>
+
+          <ul class="checklist">
+            <li>
+              <span class="check" aria-hidden="true">✓</span>
+              <span><strong>Sin reservas reales.</strong> Confirmar genera únicamente un código DEMO.</span>
+            </li>
+            <li>
+              <span class="check" aria-hidden="true">✓</span>
+              <span><strong>Sin base de datos.</strong> Los campos viven solo en esta pestaña.</span>
+            </li>
+            <li>
+              <span class="check" aria-hidden="true">✓</span>
+              <span><strong>Sin conexiones externas.</strong> La ruta bloquea solicitudes salientes.</span>
+            </li>
+            <li>
+              <span class="check" aria-hidden="true">✓</span>
+              <span><strong>Sin información inventada.</strong> Precios y horarios se muestran como ejemplos pendientes de configuración.</span>
+            </li>
+          </ul>
+
+          <div class="testing-note">
+            Usa nombres y teléfonos ficticios. Al recargar o reiniciar, la simulación se borra.
+            <button class="reset-button" id="resetDemo" type="button">Reiniciar toda la prueba</button>
+          </div>
+        </aside>
+
+        <section class="chat" aria-label="Simulador del asistente">
+          <header class="chat-head">
+            <div class="assistant-id">
+              <div class="assistant-avatar" aria-hidden="true">E</div>
+              <div>
+                <strong>Bot Oficial Emiliana</strong>
+                <span>Entorno seguro de pruebas</span>
+              </div>
+            </div>
+            <div class="network-lock">Conexiones bloqueadas</div>
+          </header>
+
+          <div class="messages" id="messages" aria-live="polite" aria-label="Conversación de prueba"></div>
+          <div class="interactive" id="interactiveCard"></div>
+          <footer class="chat-foot">
+            DEMOSTRACIÓN · No guarda datos · No crea reservas · No llama a OpenAI
+          </footer>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        const messages = document.getElementById("messages");
+        const interactive = document.getElementById("interactiveCard");
+        const resetButton = document.getElementById("resetDemo");
+        const state = {
+          reservation: {},
+          management: {},
+          group: {},
+          handoff: {}
+        };
+
+        const infoTopics = {
+          buffet: {
+            title: "Información del buffet",
+            text: "Aquí aparecerá la descripción oficial del buffet desde la configuración aprobada."
+          },
+          prices: {
+            title: "Precios",
+            text: "Aquí aparecerán únicamente los precios oficiales vigentes. Esta demostración no consulta ni inventa montos."
+          },
+          hours: {
+            title: "Horarios",
+            text: "Aquí aparecerán los horarios oficiales configurados. En el laboratorio no se muestran horarios sin verificar."
+          },
+          location: {
+            title: "Ubicación",
+            text: "Aquí aparecerán la dirección oficial y el botón para llegar cuando estén conectados a la configuración pública."
+          },
+          payments: {
+            title: "Métodos de pago",
+            text: "Aquí aparecerán los métodos de pago confirmados por el restaurante."
+          },
+          dietary: {
+            title: "Opciones alimentarias",
+            text: "El bot registrará alergias o restricciones, pero el equipo deberá confirmar las alternativas y el manejo de alérgenos."
+          }
+        };
+
+        function escapeText(value) {
+          return String(value == null ? "" : value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+
+        function addMessage(role, text) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "message " + (role === "user" ? "message--user" : "message--bot");
+
+          const avatar = document.createElement("span");
+          avatar.className = "message-avatar";
+          avatar.setAttribute("aria-hidden", "true");
+          avatar.textContent = role === "user" ? "TÚ" : "E";
+
+          const bubble = document.createElement("div");
+          bubble.className = "bubble";
+          bubble.textContent = text;
+
+          wrapper.append(avatar, bubble);
+          messages.appendChild(wrapper);
+          messages.scrollTop = messages.scrollHeight;
+        }
+
+        function userChoice(label) {
+          addMessage("user", label);
+        }
+
+        function setCard(markup) {
+          interactive.innerHTML = markup;
+          const firstControl = interactive.querySelector("button, input, select, textarea");
+          if (firstControl) {
+            window.setTimeout(function () {
+              firstControl.focus({ preventScroll: true });
+            }, 0);
+          }
+        }
+
+        function requiredValue(id, errorId) {
+          const element = document.getElementById(id);
+          const value = element ? element.value.trim() : "";
+          if (!value) {
+            const error = document.getElementById(errorId);
+            if (error) error.textContent = "Completa los campos obligatorios para continuar.";
+            if (element) element.focus();
+            return null;
+          }
+          return value;
+        }
+
+        function todayValue() {
+          const now = new Date();
+          const offset = now.getTimezoneOffset();
+          return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10);
+        }
+
+        function maskPhone(value) {
+          const clean = String(value || "").replace(/\s+/g, "");
+          if (clean.length <= 4) return clean;
+          return "••••••" + clean.slice(-4);
+        }
+
+        function summaryRow(label, value) {
+          return '<div class="summary-row"><span>' + escapeText(label) + '</span><span>' +
+            escapeText(value || "No indicado") + "</span></div>";
+        }
+
+        function renderHome(options) {
+          const config = options || {};
+          if (!config.keepMessages) {
+            messages.innerHTML = "";
+            addMessage("bot", "¡Hola! Soy el asistente oficial del Buffet Emiliana. Esta es una demostración sin inteligencia artificial. ¿Qué deseas probar?");
+          } else {
+            addMessage("bot", "Elige otra función para continuar probando.");
+          }
+
+          setCard(
+            '<section class="card" aria-labelledby="homeTitle">' +
+              '<div class="card-head"><div><h2 id="homeTitle">¿Qué deseas hacer?</h2>' +
+              '<p class="card-description">Todos los resultados de esta pantalla son simulados.</p></div>' +
+              '<span class="step-badge">DEMO</span></div>' +
+              '<div class="quick-grid">' +
+                '<button class="choice" type="button" data-action="reserve">Reservar una mesa<small>Prueba los 4 pasos y la confirmación</small></button>' +
+                '<button class="choice" type="button" data-action="info">Información del buffet<small>Precios, horarios, ubicación y más</small></button>' +
+                '<button class="choice" type="button" data-action="manage">Gestionar mi reserva<small>Consulta, modificación y cancelación simuladas</small></button>' +
+                '<button class="choice" type="button" data-action="group">Grupo o evento<small>Registra una solicitud de demostración</small></button>' +
+                '<button class="choice" type="button" data-action="handoff">Hablar con el equipo<small>Prueba la derivación humana</small></button>' +
+                '<button class="choice" type="button" data-action="security">¿Por qué no gasta IA?<small>Revisa la protección técnica</small></button>' +
+              '</div>' +
+            '</section>'
+          );
+
+          interactive.querySelectorAll("[data-action]").forEach(function (button) {
+            button.addEventListener("click", function () {
+              const action = button.dataset.action;
+              userChoice(button.firstChild.textContent.trim());
+              if (action === "reserve") reservationStepOne();
+              if (action === "info") renderInfoTopics();
+              if (action === "manage") renderManageMenu();
+              if (action === "group") groupStep();
+              if (action === "handoff") handoffStep();
+              if (action === "security") renderSecurity();
+            });
+          });
+        }
+
+        function cardBack(handler) {
+          const button = interactive.querySelector("[data-back]");
+          if (button) button.addEventListener("click", handler);
+        }
+
+        function reservationStepOne() {
+          addMessage("bot", "Empecemos por el tipo de visita y el número de personas.");
+          setCard(
+            '<section class="card" aria-labelledby="reservationOneTitle">' +
+              '<div class="card-head"><div><h2 id="reservationOneTitle">Tu visita</h2>' +
+              '<p class="card-description">Usa datos ficticios para la prueba.</p></div><span class="step-badge">1 de 4</span></div>' +
+              '<div class="progress" aria-label="Progreso 25%"><span style="width:25%"></span></div>' +
+              '<div class="fields">' +
+                '<div class="field"><label for="partySize">Número de personas <span>*</span></label>' +
+                '<input id="partySize" type="number" min="1" max="200" inputmode="numeric" value="' + escapeText(state.reservation.partySize || "") + '"></div>' +
+                '<div class="field"><label for="serviceType">Tipo de servicio <span>*</span></label>' +
+                '<select id="serviceType"><option value="">Selecciona</option>' +
+                '<option value="[Ejemplo] Buffet">[Ejemplo] Buffet</option>' +
+                '<option value="[Ejemplo] Reserva de mesa">[Ejemplo] Reserva de mesa</option>' +
+                '<option value="[Ejemplo] Grupo o evento">[Ejemplo] Grupo o evento</option></select>' +
+                '<span class="field-help">Las opciones reales vendrán de la configuración oficial.</span></div>' +
+              '</div><p class="error" id="reservationOneError" role="alert"></p>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button>' +
+              '<button class="button button--primary" type="button" id="reservationOneNext">Continuar</button></div>' +
+            '</section>'
+          );
+          if (state.reservation.serviceType) {
+            document.getElementById("serviceType").value = state.reservation.serviceType;
+          }
+          document.getElementById("reservationOneNext").addEventListener("click", function () {
+            const partySize = requiredValue("partySize", "reservationOneError");
+            const serviceType = requiredValue("serviceType", "reservationOneError");
+            if (!partySize || !serviceType) return;
+            state.reservation.partySize = partySize;
+            state.reservation.serviceType = serviceType;
+            reservationStepTwo();
+          });
+          cardBack(function () { renderHome({ keepMessages: true }); });
+        }
+
+        function reservationStepTwo() {
+          addMessage("bot", "Ahora elige una fecha y una hora de demostración.");
+          setCard(
+            '<section class="card" aria-labelledby="reservationTwoTitle">' +
+              '<div class="card-head"><div><h2 id="reservationTwoTitle">Fecha y hora</h2>' +
+              '<p class="card-description">No se consulta disponibilidad real.</p></div><span class="step-badge">2 de 4</span></div>' +
+              '<div class="progress" aria-label="Progreso 50%"><span style="width:50%"></span></div>' +
+              '<div class="fields">' +
+                '<div class="field"><label for="reservationDate">Fecha <span>*</span></label>' +
+                '<input id="reservationDate" type="date" min="' + todayValue() + '" value="' + escapeText(state.reservation.date || "") + '"></div>' +
+                '<div class="field"><label for="reservationTime">Hora solicitada <span>*</span></label>' +
+                '<input id="reservationTime" type="time" value="' + escapeText(state.reservation.time || "") + '">' +
+                '<span class="field-help">En producción, el sistema deberá confirmar el horario.</span></div>' +
+              '</div><p class="error" id="reservationTwoError" role="alert"></p>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
+              '<button class="button button--primary" type="button" id="reservationTwoNext">Continuar</button></div>' +
+            '</section>'
+          );
+          document.getElementById("reservationTwoNext").addEventListener("click", function () {
+            const date = requiredValue("reservationDate", "reservationTwoError");
+            const time = requiredValue("reservationTime", "reservationTwoError");
+            if (!date || !time) return;
+            state.reservation.date = date;
+            state.reservation.time = time;
+            reservationStepThree();
+          });
+          cardBack(reservationStepOne);
+        }
+
+        function reservationStepThree() {
+          addMessage("bot", "Completa datos ficticios de contacto. Nada se guardará.");
+          setCard(
+            '<section class="card" aria-labelledby="reservationThreeTitle">' +
+              '<div class="card-head"><div><h2 id="reservationThreeTitle">Datos de contacto</h2>' +
+              '<p class="card-description">No uses información sensible en esta prueba.</p></div><span class="step-badge">3 de 4</span></div>' +
+              '<div class="progress" aria-label="Progreso 75%"><span style="width:75%"></span></div>' +
+              '<div class="fields">' +
+                '<div class="field field--full"><label for="customerName">Nombre de prueba <span>*</span></label>' +
+                '<input id="customerName" type="text" maxlength="120" autocomplete="off" placeholder="Ejemplo: Cliente Prueba" value="' + escapeText(state.reservation.name || "") + '"></div>' +
+                '<div class="field"><label for="customerPhone">Teléfono ficticio <span>*</span></label>' +
+                '<input id="customerPhone" type="tel" maxlength="30" autocomplete="off" placeholder="+51 900 000 000" value="' + escapeText(state.reservation.phone || "") + '"></div>' +
+                '<div class="field"><label for="customerEmail">Correo ficticio</label>' +
+                '<input id="customerEmail" type="email" maxlength="254" autocomplete="off" placeholder="prueba@ejemplo.test" value="' + escapeText(state.reservation.email || "") + '"></div>' +
+              '</div><p class="error" id="reservationThreeError" role="alert"></p>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
+              '<button class="button button--primary" type="button" id="reservationThreeNext">Continuar</button></div>' +
+            '</section>'
+          );
+          document.getElementById("reservationThreeNext").addEventListener("click", function () {
+            const name = requiredValue("customerName", "reservationThreeError");
+            const phone = requiredValue("customerPhone", "reservationThreeError");
+            if (!name || !phone) return;
+            state.reservation.name = name;
+            state.reservation.phone = phone;
+            state.reservation.email = document.getElementById("customerEmail").value.trim();
+            reservationStepFour();
+          });
+          cardBack(reservationStepTwo);
+        }
+
+        function reservationStepFour() {
+          addMessage("bot", "Puedes agregar restricciones y observaciones, o dejar los cuadros vacíos.");
+          setCard(
+            '<section class="card" aria-labelledby="reservationFourTitle">' +
+              '<div class="card-head"><div><h2 id="reservationFourTitle">Detalles opcionales</h2>' +
+              '<p class="card-description">El equipo debe confirmar cualquier manejo de alérgenos.</p></div><span class="step-badge">4 de 4</span></div>' +
+              '<div class="progress" aria-label="Progreso 100%"><span style="width:100%"></span></div>' +
+              '<div class="fields">' +
+                '<div class="field field--full"><label for="dietary">Alergias o restricciones</label>' +
+                '<textarea id="dietary" maxlength="500" placeholder="Ejemplo de prueba">' + escapeText(state.reservation.dietary || "") + '</textarea></div>' +
+                '<div class="field field--full"><label for="notes">Observaciones</label>' +
+                '<textarea id="notes" maxlength="1000" placeholder="Ejemplo de prueba">' + escapeText(state.reservation.notes || "") + '</textarea></div>' +
+              '</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
+              '<button class="button button--primary" type="button" id="reservationReview">Revisar reserva</button></div>' +
+            '</section>'
+          );
+          document.getElementById("reservationReview").addEventListener("click", function () {
+            state.reservation.dietary = document.getElementById("dietary").value.trim();
+            state.reservation.notes = document.getElementById("notes").value.trim();
+            reservationSummary();
+          });
+          cardBack(reservationStepThree);
+        }
+
+        function reservationSummary() {
+          addMessage("bot", "Revisa el resumen. Confirmar solo ejecutará una simulación local.");
+          setCard(
+            '<section class="card" aria-labelledby="reservationSummaryTitle">' +
+              '<div class="card-head"><div><h2 id="reservationSummaryTitle">Confirma tu reserva de prueba</h2>' +
+              '<p class="card-description">Ninguno de estos datos será enviado.</p></div><span class="step-badge">RESUMEN</span></div>' +
+              '<div class="summary">' +
+                summaryRow("Servicio", state.reservation.serviceType) +
+                summaryRow("Personas", state.reservation.partySize) +
+                summaryRow("Fecha", state.reservation.date) +
+                summaryRow("Hora", state.reservation.time) +
+                summaryRow("Nombre", state.reservation.name) +
+                summaryRow("Teléfono", maskPhone(state.reservation.phone)) +
+                summaryRow("Correo", state.reservation.email) +
+                summaryRow("Restricciones", state.reservation.dietary) +
+                summaryRow("Observaciones", state.reservation.notes) +
+              '</div>' +
+              '<div class="demo-notice"><strong>Simulación segura:</strong> el botón no guarda, no envía y no utiliza inteligencia artificial.</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Editar</button>' +
+              '<button class="button button--primary" type="button" id="confirmReservation">Confirmar simulación</button></div>' +
+            '</section>'
+          );
+          document.getElementById("confirmReservation").addEventListener("click", reservationSuccess);
+          cardBack(reservationStepOne);
+        }
+
+        function reservationSuccess() {
+          userChoice("Confirmar simulación");
+          addMessage("bot", "La demostración se completó. No se creó ninguna reserva real.");
+          setCard(
+            '<section class="card" aria-labelledby="reservationSuccessTitle">' +
+              '<div class="card-head"><div><h2 id="reservationSuccessTitle">Prueba completada</h2>' +
+              '<p class="card-description">Resultado local del laboratorio.</p></div><span class="step-badge">✓ DEMO</span></div>' +
+              '<div class="success-box"><strong>Código: DEMO-EMI-0001</strong>No se guardó ninguna reserva y no se consumió saldo de OpenAI.</div>' +
+              '<div class="actions"><button class="button button--primary" type="button" id="returnHome">Probar otra función</button></div>' +
+            '</section>'
+          );
+          document.getElementById("returnHome").addEventListener("click", function () {
+            renderHome({ keepMessages: true });
+          });
+        }
+
+        function renderInfoTopics() {
+          addMessage("bot", "Selecciona la información que deseas visualizar.");
+          const buttons = Object.keys(infoTopics).map(function (key) {
+            return '<button class="choice" type="button" data-topic="' + key + '">' +
+              escapeText(infoTopics[key].title) + '<small>Respuesta pregrabada segura</small></button>';
+          }).join("");
+          setCard(
+            '<section class="card" aria-labelledby="infoTitle">' +
+              '<div class="card-head"><div><h2 id="infoTitle">Información oficial</h2>' +
+              '<p class="card-description">El laboratorio no consulta datos reales.</p></div><span class="step-badge">CUADROS</span></div>' +
+              '<div class="topic-grid">' + buttons + '</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button></div>' +
+            '</section>'
+          );
+          interactive.querySelectorAll("[data-topic]").forEach(function (button) {
+            button.addEventListener("click", function () {
+              userChoice(infoTopics[button.dataset.topic].title);
+              renderInfoAnswer(button.dataset.topic);
+            });
+          });
+          cardBack(function () { renderHome({ keepMessages: true }); });
+        }
+
+        function renderInfoAnswer(topicKey) {
+          const topic = infoTopics[topicKey];
+          addMessage("bot", topic.text);
+          setCard(
+            '<section class="card" aria-labelledby="answerTitle">' +
+              '<div class="card-head"><div><h2 id="answerTitle">' + escapeText(topic.title) + '</h2>' +
+              '<p class="card-description">Fuente de demostración</p></div><span class="step-badge">NO VERIFICADO</span></div>' +
+              '<div class="demo-notice">' + escapeText(topic.text) + '</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" id="moreInfo">Más información</button>' +
+              '<button class="button button--primary" type="button" id="fromInfoReserve">Probar reserva</button></div>' +
+            '</section>'
+          );
+          document.getElementById("moreInfo").addEventListener("click", renderInfoTopics);
+          document.getElementById("fromInfoReserve").addEventListener("click", reservationStepOne);
+        }
+
+        function renderManageMenu() {
+          addMessage("bot", "Puedes probar la consulta, modificación o cancelación sin tocar una reserva real.");
+          setCard(
+            '<section class="card" aria-labelledby="manageTitle">' +
+              '<div class="card-head"><div><h2 id="manageTitle">Gestionar reserva</h2>' +
+              '<p class="card-description">La búsqueda siempre será simulada.</p></div><span class="step-badge">DEMO</span></div>' +
+              '<div class="quick-grid">' +
+                '<button class="choice" type="button" data-manage="status">Consultar estado<small>Muestra una reserva de ejemplo</small></button>' +
+                '<button class="choice" type="button" data-manage="modify">Modificar reserva<small>Prueba antes y después</small></button>' +
+                '<button class="choice" type="button" data-manage="cancel">Cancelar reserva<small>Prueba confirmación sensible</small></button>' +
+              '</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button></div>' +
+            '</section>'
+          );
+          interactive.querySelectorAll("[data-manage]").forEach(function (button) {
+            button.addEventListener("click", function () {
+              const labels = { status: "Consultar estado", modify: "Modificar reserva", cancel: "Cancelar reserva" };
+              userChoice(labels[button.dataset.manage]);
+              manageLookup(button.dataset.manage);
+            });
+          });
+          cardBack(function () { renderHome({ keepMessages: true }); });
+        }
+
+        function manageLookup(mode) {
+          addMessage("bot", "Ingresa cualquier código ficticio y un dato de verificación.");
+          setCard(
+            '<section class="card" aria-labelledby="lookupTitle">' +
+              '<div class="card-head"><div><h2 id="lookupTitle">Verifica tu reserva</h2>' +
+              '<p class="card-description">No se realizará ninguna consulta externa.</p></div><span class="step-badge">SEGURA</span></div>' +
+              '<div class="fields">' +
+                '<div class="field"><label for="demoCode">Código ficticio <span>*</span></label><input id="demoCode" type="text" value="DEMO-1234" maxlength="80"></div>' +
+                '<div class="field"><label for="demoVerify">Dato de verificación <span>*</span></label><input id="demoVerify" type="text" value="0000" maxlength="80"></div>' +
+              '</div><p class="error" id="lookupError" role="alert"></p>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
+              '<button class="button button--primary" type="button" id="runLookup">Buscar demostración</button></div>' +
+            '</section>'
+          );
+          document.getElementById("runLookup").addEventListener("click", function () {
+            const code = requiredValue("demoCode", "lookupError");
+            const verify = requiredValue("demoVerify", "lookupError");
+            if (!code || !verify) return;
+            state.management.code = code;
+            if (mode === "status") manageStatus();
+            if (mode === "modify") manageModify();
+            if (mode === "cancel") manageCancel();
+          });
+          cardBack(renderManageMenu);
+        }
+
+        function demoReservationRows() {
+          return summaryRow("Código", state.management.code || "DEMO-1234") +
+            summaryRow("Estado", "Confirmada · ejemplo") +
+            summaryRow("Fecha", "Fecha simulada") +
+            summaryRow("Hora", "Hora simulada") +
+            summaryRow("Personas", "4 · ejemplo");
+        }
+
+        function manageStatus() {
+          addMessage("bot", "Este es un resultado ficticio para revisar el diseño del cuadro de estado.");
+          setCard(
+            '<section class="card" aria-labelledby="statusTitle">' +
+              '<div class="card-head"><div><h2 id="statusTitle">Estado de la reserva</h2>' +
+              '<p class="card-description">Resultado de demostración</p></div><span class="step-badge">SIMULADO</span></div>' +
+              '<div class="summary">' + demoReservationRows() + '</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" id="manageAgain">Volver a gestionar</button>' +
+              '<button class="button button--primary" type="button" id="statusHome">Inicio</button></div>' +
+            '</section>'
+          );
+          document.getElementById("manageAgain").addEventListener("click", renderManageMenu);
+          document.getElementById("statusHome").addEventListener("click", function () { renderHome({ keepMessages: true }); });
+        }
+
+        function manageModify() {
+          addMessage("bot", "Indica un cambio de ejemplo y revísalo antes de confirmar.");
+          setCard(
+            '<section class="card" aria-labelledby="modifyTitle">' +
+              '<div class="card-head"><div><h2 id="modifyTitle">Modificar reserva</h2>' +
+              '<p class="card-description">Cambio de demostración</p></div><span class="step-badge">SIMULADO</span></div>' +
+              '<div class="fields">' +
+                '<div class="field"><label for="newDate">Nueva fecha <span>*</span></label><input id="newDate" type="date" min="' + todayValue() + '"></div>' +
+                '<div class="field"><label for="newPeople">Nuevo número de personas <span>*</span></label><input id="newPeople" type="number" min="1" max="200" value="5"></div>' +
+              '</div><p class="error" id="modifyError" role="alert"></p>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
+              '<button class="button button--primary" type="button" id="reviewModify">Revisar cambio</button></div>' +
+            '</section>'
+          );
+          document.getElementById("reviewModify").addEventListener("click", function () {
+            const date = requiredValue("newDate", "modifyError");
+            const people = requiredValue("newPeople", "modifyError");
+            if (!date || !people) return;
+            state.management.newDate = date;
+            state.management.newPeople = people;
+            confirmModify();
+          });
+          cardBack(renderManageMenu);
+        }
+
+        function confirmModify() {
+          addMessage("bot", "Confirma solo si el antes y el después están correctos.");
+          setCard(
+            '<section class="card" aria-labelledby="confirmModifyTitle">' +
+              '<div class="card-head"><div><h2 id="confirmModifyTitle">Confirma los cambios</h2>' +
+              '<p class="card-description">No se modificará ningún registro.</p></div><span class="step-badge">CONFIRMACIÓN</span></div>' +
+              '<div class="summary">' +
+                summaryRow("Antes", "Fecha y 4 personas · ejemplo") +
+                summaryRow("Después", state.management.newDate + " · " + state.management.newPeople + " personas") +
+              '</div>' +
+              '<div class="demo-notice">Esta confirmación solo cambia la pantalla actual.</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Editar</button>' +
+              '<button class="button button--primary" type="button" id="applyModify">Confirmar simulación</button></div>' +
+            '</section>'
+          );
+          document.getElementById("applyModify").addEventListener("click", function () {
+            userChoice("Confirmar modificación simulada");
+            addMessage("bot", "Modificación simulada correctamente. La reserva real no cambió.");
+            demoOperationSuccess("Modificación de prueba completada");
+          });
+          cardBack(manageModify);
+        }
+
+        function manageCancel() {
+          addMessage("bot", "La cancelación exige una confirmación clara. Este cuadro no cancela nada real.");
+          setCard(
+            '<section class="card" aria-labelledby="cancelTitle">' +
+              '<div class="card-head"><div><h2 id="cancelTitle">¿Cancelar esta reserva?</h2>' +
+              '<p class="card-description">Confirmación sensible de demostración</p></div><span class="step-badge">ATENCIÓN</span></div>' +
+              '<div class="summary">' + demoReservationRows() + '</div>' +
+              '<div class="danger-box"><strong>Solo prueba:</strong> confirmar no modifica ni elimina registros.</div>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>No, mantener</button>' +
+              '<button class="button button--danger" type="button" id="confirmCancel">Sí, simular cancelación</button></div>' +
+            '</section>'
+          );
+          document.getElementById("confirmCancel").addEventListener("click", function () {
+            userChoice("Simular cancelación");
+            addMessage("bot", "Cancelación simulada. No se modificó ninguna reserva.");
+            demoOperationSuccess("Cancelación de prueba completada");
+          });
+          cardBack(renderManageMenu);
+        }
+
+        function demoOperationSuccess(title) {
+          setCard(
+            '<section class="card" aria-labelledby="operationTitle">' +
+              '<div class="card-head"><div><h2 id="operationTitle">' + escapeText(title) + '</h2>' +
+              '<p class="card-description">Resultado local</p></div><span class="step-badge">✓ DEMO</span></div>' +
+              '<div class="success-box"><strong>No hubo cambios reales</strong>No se llamó a la API, a la base de datos ni a OpenAI.</div>' +
+              '<div class="actions"><button class="button button--primary" type="button" id="operationHome">Probar otra función</button></div>' +
+            '</section>'
+          );
+          document.getElementById("operationHome").addEventListener("click", function () { renderHome({ keepMessages: true }); });
+        }
+
+        function groupStep() {
+          addMessage("bot", "Completa una solicitud ficticia para grupo o evento.");
+          setCard(
+            '<section class="card" aria-labelledby="groupTitle">' +
+              '<div class="card-head"><div><h2 id="groupTitle">Grupo o evento</h2>' +
+              '<p class="card-description">Una solicitud no equivale a una reserva confirmada.</p></div><span class="step-badge">DEMO</span></div>' +
+              '<div class="fields">' +
+                '<div class="field"><label for="groupType">Tipo <span>*</span></label><select id="groupType"><option value="">Selecciona</option><option>[Ejemplo] Grupo turístico</option><option>[Ejemplo] Celebración</option><option>[Ejemplo] Evento</option></select></div>' +
+                '<div class="field"><label for="groupPeople">Personas estimadas <span>*</span></label><input id="groupPeople" type="number" min="1" max="500"></div>' +
+                '<div class="field"><label for="groupDate">Fecha preferida <span>*</span></label><input id="groupDate" type="date" min="' + todayValue() + '"></div>' +
+                '<div class="field"><label for="groupContact">Contacto ficticio <span>*</span></label><input id="groupContact" type="text" maxlength="120" placeholder="Cliente Prueba"></div>' +
+                '<div class="field field--full"><label for="groupDetails">¿Qué necesitas?</label><textarea id="groupDetails" maxlength="1500" placeholder="Describe un caso ficticio"></textarea></div>' +
+              '</div><p class="error" id="groupError" role="alert"></p>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button>' +
+              '<button class="button button--primary" type="button" id="sendGroup">Simular envío</button></div>' +
+            '</section>'
+          );
+          document.getElementById("sendGroup").addEventListener("click", function () {
+            const type = requiredValue("groupType", "groupError");
+            const people = requiredValue("groupPeople", "groupError");
+            const date = requiredValue("groupDate", "groupError");
+            const contact = requiredValue("groupContact", "groupError");
+            if (!type || !people || !date || !contact) return;
+            userChoice("Enviar solicitud de demostración");
+            addMessage("bot", "Solicitud simulada. El equipo no recibió datos reales.");
+            demoOperationSuccess("Solicitud de grupo simulada");
+          });
+          cardBack(function () { renderHome({ keepMessages: true }); });
+        }
+
+        function handoffStep() {
+          addMessage("bot", "Prueba cómo se presentaría una derivación a una persona del equipo.");
+          setCard(
+            '<section class="card" aria-labelledby="handoffTitle">' +
+              '<div class="card-head"><div><h2 id="handoffTitle">Hablar con el equipo</h2>' +
+              '<p class="card-description">No se enviará ningún mensaje real.</p></div><span class="step-badge">DEMO</span></div>' +
+              '<div class="fields">' +
+                '<div class="field"><label for="handoffCategory">Motivo <span>*</span></label><select id="handoffCategory"><option value="">Selecciona</option><option>Reserva</option><option>Información</option><option>Grupo o evento</option><option>Comentario</option></select></div>' +
+                '<div class="field"><label for="handoffContact">Contacto ficticio <span>*</span></label><input id="handoffContact" type="text" maxlength="120" placeholder="900 000 000"></div>' +
+                '<div class="field field--full"><label for="handoffMessage">Mensaje <span>*</span></label><textarea id="handoffMessage" maxlength="1500" placeholder="Escribe una consulta ficticia"></textarea></div>' +
+              '</div><p class="error" id="handoffError" role="alert"></p>' +
+              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button>' +
+              '<button class="button button--primary" type="button" id="sendHandoff">Simular derivación</button></div>' +
+            '</section>'
+          );
+          document.getElementById("sendHandoff").addEventListener("click", function () {
+            const category = requiredValue("handoffCategory", "handoffError");
+            const contact = requiredValue("handoffContact", "handoffError");
+            const message = requiredValue("handoffMessage", "handoffError");
+            if (!category || !contact || !message) return;
+            userChoice("Enviar consulta de demostración");
+            addMessage("bot", "Derivación simulada. No se avisó a ninguna persona ni se almacenaron datos.");
+            demoOperationSuccess("Derivación de prueba completada");
+          });
+          cardBack(function () { renderHome({ keepMessages: true }); });
+        }
+
+        function renderSecurity() {
+          addMessage("bot", "La protección no depende solo de una promesa: la ruta impide técnicamente las conexiones salientes.");
+          setCard(
+            '<section class="card" aria-labelledby="securityTitle">' +
+              '<div class="card-head"><div><h2 id="securityTitle">Protección de consumo</h2>' +
+              '<p class="card-description">Cómo funciona este laboratorio</p></div><span class="step-badge">S/ 0 IA</span></div>' +
+              '<div class="summary">' +
+                summaryRow("API de OpenAI", "No conectada") +
+                summaryRow("Base de datos", "No conectada") +
+                summaryRow("Reservas reales", "Desactivadas") +
+                summaryRow("Solicitudes externas", "Bloqueadas") +
+                summaryRow("Almacenamiento", "Solo memoria temporal") +
+              '</div>' +
+              '<div class="success-box"><strong>Uso seguro</strong>Puedes pulsar todos los botones de esta página: únicamente cambian elementos de la pantalla.</div>' +
+              '<div class="actions"><button class="button button--primary" type="button" id="securityHome">Entendido, seguir probando</button></div>' +
+            '</section>'
+          );
+          document.getElementById("securityHome").addEventListener("click", function () {
+            renderHome({ keepMessages: true });
+          });
+        }
+
+        resetButton.addEventListener("click", function () {
+          state.reservation = {};
+          state.management = {};
+          state.group = {};
+          state.handoff = {};
+          renderHome();
+        });
+
+        renderHome();
+      })();
+    </script>
+  </body>
+</html>
