@@ -1,0 +1,12 @@
+{
+  "name": "emiliana-restaurante-oficial",
+  "version": "2026.8.29",
+  "private": true,
+  "description": "Capa de publicación e integración del Centro de Solicitudes de Emiliana Restaurant",
+  "scripts": {
+    "test": "node --check area.js && node --check reservation.js && node --check api/seo-proxy.js && node scripts/verify.mjs && node scripts/verify-proxy.cjs"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

@@ -1,12 +1,184 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "emilianarestaurantebuffetcusco.com.pe"
+        }
+      ],
+      "destination": "https://www.emilianarestaurantebuffetcusco.com.pe/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "emiliana-restaurante-oficial.vercel.app"
+        }
+      ],
+      "destination": "https://www.emilianarestaurantebuffetcusco.com.pe/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "emiliana-restaurante-oficial-legion2pac-1964s-projects.vercel.app"
+        }
+      ],
+      "destination": "https://www.emilianarestaurantebuffetcusco.com.pe/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/portal-publico",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/portal-publico"
+    },
+    {
+      "source": "/seguimiento",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/seguimiento"
+    },
+    {
+      "source": "/panel",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/panel"
+    },
+    {
+      "source": "/panel.html",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/panel.html"
+    },
+    {
+      "source": "/ia-lab",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/ia-lab"
+    },
+    {
+      "source": "/css/styles.css",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/css/styles.css"
+    },
+    {
+      "source": "/js/:path*",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/js/:path*"
+    },
+    {
+      "source": "/api/health",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/api/health"
+    },
+    {
+      "source": "/api/session",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/api/session"
+    },
+    {
+      "source": "/api/metricas",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/api/metricas"
+    },
+    {
+      "source": "/api/solicitudes",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/api/solicitudes"
+    },
+    {
+      "source": "/api/solicitudes/:path*",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/api/solicitudes/:path*"
+    },
+    {
+      "source": "/api/seguimiento/:path*",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/api/seguimiento/:path*"
+    },
+    {
+      "source": "/api/ia/:path*",
+      "destination": "https://emiliana-centro-solicitudes-staging.vercel.app/api/ia/:path*"
+    },
+    {
+      "source": "/",
+      "destination": "/api/seo-proxy?path=/"
+    },
+    {
+      "source": "/danzas",
+      "destination": "/api/seo-proxy?path=/danzas"
+    },
+    {
+      "source": "/buffet-cultural-cusco",
+      "destination": "/api/seo-proxy?path=/buffet-cultural-cusco"
+    },
+    {
+      "source": "/carta",
+      "destination": "/api/seo-proxy?path=/carta"
+    },
+    {
+      "source": "/reservas",
+      "destination": "/api/seo-proxy?path=/reservas"
+    },
+    {
+      "source": "/agencias",
+      "destination": "/api/seo-proxy?path=/agencias"
+    },
+    {
+      "source": "/areas",
+      "destination": "/api/seo-proxy?path=/areas&noindex=1"
+    },
+    {
+      "source": "/publicidad-reservas",
+      "destination": "/api/seo-proxy?path=/publicidad-reservas&noindex=1"
+    },
+    {
+      "source": "/facturas-contabilidad",
+      "destination": "/api/seo-proxy?path=/facturas-contabilidad&noindex=1"
+    },
+    {
+      "source": "/administracion",
+      "destination": "/api/seo-proxy?path=/administracion&noindex=1"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/api/seo-proxy?special=robots"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/seo-proxy?special=sitemap"
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://emiliana-restaurante-oficial-6wvhbusc5.vercel.app/:path*"
+    }
+  ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/(area|reservation).js",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/(portal-publico|seguimiento|panel|panel.html|ia-lab)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
         }
       ]
     }

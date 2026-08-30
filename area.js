@@ -8,8 +8,7 @@
 
   const ORIGINAL_ORIGIN =
     'https://emiliana-restaurante-oficial-etjm75g81.vercel.app';
-  const PORTAL_ORIGIN =
-    'https://emiliana-centro-solicitudes-staging.vercel.app';
+  const PORTAL_ORIGIN = window.location.origin;
   const AREA_BY_PATH = {
     '/publicidad-reservas': 'publicidad-reservas',
     '/facturas-contabilidad': 'facturas-contabilidad',
@@ -40,6 +39,18 @@
   function portalUrl(area) {
     const query = area ? `?area=${encodeURIComponent(area)}` : '';
     return `${PORTAL_ORIGIN}/portal-publico${query}#solicitud`;
+  }
+
+  function trackingUrl(value) {
+    const fallback = `${PORTAL_ORIGIN}/seguimiento`;
+    if (!value) return fallback;
+    try {
+      const url = new URL(value, PORTAL_ORIGIN);
+      if (url.pathname !== '/seguimiento') return fallback;
+      return `${PORTAL_ORIGIN}${url.pathname}${url.search}${url.hash}`;
+    } catch (_error) {
+      return fallback;
+    }
   }
 
   function createPortalCard(area) {
@@ -208,7 +219,7 @@
     const tracking = section.querySelector('[data-tracking-link]');
     const pdf = section.querySelector('[data-pdf-link]');
     const whatsapp = section.querySelector('[data-whatsapp-link]');
-    tracking.href = result.trackingUrl || `${PORTAL_ORIGIN}/seguimiento`;
+    tracking.href = trackingUrl(result.trackingUrl);
     if (result.pdfUrl) pdf.href = result.pdfUrl;
     else pdf.hidden = true;
     whatsapp.href = result.whatsappUrl || portalUrl('publicidad-reservas');
@@ -388,7 +399,7 @@
         <p>Seleccione el área y consulte el estado con un código y una clave privada.</p>
       </div>
       <div class="emiliana-areas-callout__actions">
-        <a class="emiliana-areas-callout__primary" href="${PORTAL_ORIGIN}/">
+        <a class="emiliana-areas-callout__primary" href="${portalUrl()}">
           IR AL CENTRO <b aria-hidden="true">→</b>
         </a>
         <a

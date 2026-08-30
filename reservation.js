@@ -3,7 +3,7 @@
   'use strict';
 
   const STORAGE_KEY = 'emiliana-language-v2';
-  const PORTAL_ORIGIN = 'https://emiliana-centro-solicitudes-staging.vercel.app';
+  const PORTAL_ORIGIN = window.location.origin;
   const REQUEST_TYPE_BY_SERVICE = {
     'Buffet cultural': 'Reserva individual',
     'Grupo turístico': 'Reserva de grupo',
@@ -224,6 +224,18 @@
     return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : value;
   }
 
+  function trackingUrl(value) {
+    const fallback = `${PORTAL_ORIGIN}/seguimiento`;
+    if (!value) return fallback;
+    try {
+      const url = new URL(value, PORTAL_ORIGIN);
+      if (url.pathname !== '/seguimiento') return fallback;
+      return `${PORTAL_ORIGIN}${url.pathname}${url.search}${url.hash}`;
+    } catch (_error) {
+      return fallback;
+    }
+  }
+
   function successCopy(language) {
     const copy = {
       es: {
@@ -275,7 +287,7 @@
     const tracking = success.querySelector('[data-reservation-tracking]');
     const pdf = success.querySelector('[data-reservation-pdf]');
     tracking.textContent = copy.tracking;
-    tracking.href = result.trackingUrl || `${PORTAL_ORIGIN}/seguimiento`;
+    tracking.href = trackingUrl(result.trackingUrl);
     pdf.textContent = copy.pdf;
     if (result.pdfUrl) pdf.href = result.pdfUrl;
     else pdf.hidden = true;
