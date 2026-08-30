@@ -23,6 +23,30 @@ for (const [name, source] of [
 }
 
 assert.match(area, /\/portal-publico\$\{query\}#solicitud/, 'El enlace debe abrir el formulario público');
+assert.match(
+  area,
+  /const OFFICIAL_ORIGIN =\s*'https:\/\/www\.emilianarestaurantebuffetcusco\.com\.pe';/,
+  'El panel administrativo debe usar el origen oficial fijo',
+);
+assert.match(area, /new MutationObserver\(/, 'Los enlaces tardíos deben observarse');
+assert.match(
+  area,
+  /url\.hostname\.endsWith\('\.tupaq\.chatgpt\.site'\)/,
+  'Debe detectar cualquier subdominio antiguo de Tupaq',
+);
+assert.match(area, /path !== '\/panel'/, 'Solo debe corregir la ruta del panel antiguo');
+assert.match(
+  area,
+  /link\.href = `\$\{OFFICIAL_ORIGIN\}\/panel`;/,
+  'El panel antiguo debe reemplazarse por el panel oficial',
+);
+assert.match(area, /link\.target = '_blank';/, 'El panel debe abrirse en una pestaña nueva');
+assert.match(area, /link\.rel = 'noopener noreferrer';/, 'El panel debe aislar la pestaña nueva');
+assert.match(
+  area,
+  /link\.setAttribute\('aria-label', ADMIN_PANEL_ARIA_LABEL\);/,
+  'El enlace corregido debe conservar una etiqueta accesible',
+);
 assert.match(area, /if \(result\.pdfUrl\) pdf\.href = result\.pdfUrl;\s*else pdf\.hidden = true;/, 'El PDF opcional debe ocultarse cuando no existe');
 assert.match(reservation, /if \(result\.pdfUrl\) pdf\.href = result\.pdfUrl;\s*else pdf\.hidden = true;/, 'El PDF opcional de reservas debe ocultarse');
 assert.match(proxy, /const PROXY_PATHS = new Set\(Object\.keys\(META\)\);/, 'El proxy debe limitar sus rutas');

@@ -8,7 +8,11 @@
 
   const ORIGINAL_ORIGIN =
     'https://emiliana-restaurante-oficial-etjm75g81.vercel.app';
+  const OFFICIAL_ORIGIN =
+    'https://www.emilianarestaurantebuffetcusco.com.pe';
   const PORTAL_ORIGIN = window.location.origin;
+  const ADMIN_PANEL_ARIA_LABEL =
+    'Administradores: abrir panel de acceso por área en una pestaña nueva';
   const AREA_BY_PATH = {
     '/publicidad-reservas': 'publicidad-reservas',
     '/facturas-contabilidad': 'facturas-contabilidad',
@@ -34,6 +38,55 @@
 
   function cleanPath() {
     return window.location.pathname.replace(/\/+$/, '') || '/';
+  }
+
+  function rewriteLegacyPanelLink(link) {
+    if (!(link instanceof HTMLAnchorElement)) return;
+    try {
+      const url = new URL(link.getAttribute('href') || '', window.location.href);
+      const path = url.pathname.replace(/\/+$/, '') || '/';
+      if (
+        !url.hostname.endsWith('.tupaq.chatgpt.site') ||
+        path !== '/panel'
+      ) {
+        return;
+      }
+      link.href = `${OFFICIAL_ORIGIN}/panel`;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.setAttribute('aria-label', ADMIN_PANEL_ARIA_LABEL);
+    } catch (_error) {
+      // Ignora enlaces inválidos añadidos por scripts externos.
+    }
+  }
+
+  function rewriteLegacyPanelLinks(root) {
+    if (!root) return;
+    rewriteLegacyPanelLink(root);
+    if (typeof root.querySelectorAll !== 'function') return;
+    root.querySelectorAll('a[href]').forEach(rewriteLegacyPanelLink);
+  }
+
+  function observeLegacyPanelLinks() {
+    rewriteLegacyPanelLinks(document);
+    if (!document.documentElement) return;
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (mutation.type === 'attributes') {
+          rewriteLegacyPanelLink(mutation.target);
+          return;
+        }
+        mutation.addedNodes.forEach(function (node) {
+          rewriteLegacyPanelLinks(node);
+        });
+      });
+    });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['href']
+    });
   }
 
   function portalUrl(area) {
@@ -404,10 +457,10 @@
         </a>
         <a
           class="emiliana-areas-callout__admin"
-          href="${PORTAL_ORIGIN}/panel"
+          href="${OFFICIAL_ORIGIN}/panel"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Administradores: abrir panel de acceso por área en una pestaña nueva"
+          aria-label="${ADMIN_PANEL_ARIA_LABEL}"
         >
           <i class="emiliana-areas-callout__lock" aria-hidden="true"></i>
           ADMINISTRADORES <b aria-hidden="true">↗</b>
@@ -443,6 +496,8 @@
       addAreasPortalCallout();
     }
   }
+
+  observeLegacyPanelLinks();
 
   const originalScript = document.createElement('script');
   originalScript.src = `${ORIGINAL_ORIGIN}/area.js?v=20260813-18`;
