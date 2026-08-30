@@ -16,7 +16,7 @@ const OPENING_HOURS = {
 
 const META = {
   '/': {
-    title: 'Emiliana Restaurant | Buffet Cultural en Cusco',
+    title: 'Emiliana Restaurante Buffet Cultural Cusco | Gastronomía, Danzas y Reservas',
     description: 'Emiliana Restaurant Cultural Buffet en Cusco: gastronomía peruana, buffet cultural, música y danzas tradicionales en Av. Tullumayo 235.',
     canonical: `${OFFICIAL}/`,
     robots: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'
