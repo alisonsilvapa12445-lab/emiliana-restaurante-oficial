@@ -148,7 +148,7 @@
   ],
   "headers": [
     {
-      "source": "/(area|reservation).js",
+      "source": "/(area|reservation|site-fix).js",
       "headers": [
         {
           "key": "Cache-Control",
@@ -157,6 +157,15 @@
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/(areas|publicidad-reservas|facturas-contabilidad|administracion)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     },

@@ -12,7 +12,7 @@ global.fetch = async (url, options) => {
       },
     },
     async text() {
-      return '<!doctype html><html lang="es"><head><title>Anterior</title><meta name="description" content="Anterior"><meta name="robots" content="index"><link rel="canonical" href="https://example.invalid"><meta property="og:title" content="Anterior"><meta property="og:description" content="Anterior"><meta property="og:url" content="https://example.invalid"><meta property="og:image" content="https://example.invalid/image.jpg"></head><body><main><h1>Emiliana</h1></main></body></html>';
+      return '<!doctype html><html lang="es"><head><title>Anterior</title><meta name="description" content="Anterior"><meta name="robots" content="index"><link rel="canonical" href="https://example.invalid"><meta property="og:title" content="Anterior"><meta property="og:description" content="Anterior"><meta property="og:url" content="https://example.invalid"><meta property="og:image" content="https://example.invalid/image.jpg"></head><body><main><h1>Emiliana</h1></main><script src="/area.js"></script><script src="/site-fix.js?v=20260813-18" defer></script></body></html>';
     },
   };
 };
@@ -47,6 +47,13 @@ function invoke(query, method = 'GET') {
   const landing = await invoke({ path: '/carta' });
   assert.equal(landing.status, 200);
   assert.match(landing.body, /Carta y gastronomía peruana/);
+
+  const areas = await invoke({ path: '/areas' });
+  assert.equal(areas.status, 200);
+  assert.match(areas.body, /\/area\.js\?v=20260830-panel-oficial-1/);
+  assert.match(areas.body, /\/site-fix\.js\?v=20260830-panel-oficial-1/);
+  assert.doesNotMatch(areas.body, /site-fix\.js\?v=20260813-18/);
+  assert.equal(areas.headers.get('cache-control'), 'no-store');
 
   const robots = await invoke({ special: 'robots' });
   assert.equal(robots.status, 200);

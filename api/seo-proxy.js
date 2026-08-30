@@ -1,5 +1,6 @@
 const ORIGIN = 'https://emiliana-restaurante-oficial-6wvhbusc5.vercel.app';
 const OFFICIAL = 'https://www.emilianarestaurantebuffetcusco.com.pe';
+const FRONTEND_ASSET_VERSION = '20260830-panel-oficial-1';
 const OG_IMAGE = 'https://pub-b8f60fa2ac10486ba085807bac3019f1.r2.dev/foto%20principal%20de%20portada%20buffet%20grande/SOSIBLE%202.png';
 const LOGO = 'https://pub-b8f60fa2ac10486ba085807bac3019f1.r2.dev/LOGOTIPOS%20EN%20PNG%20TRANSPARENTES/LOGO%20EMILIANA%20DORADO%20CON%20ROJO.png?v=20260811-png';
 const DANCE_IMAGE = 'https://pub-b8f60fa2ac10486ba085807bac3019f1.r2.dev/NUEVO%20PERFIL%20DE%20PAGINA%20WEB/BAILE%20DANZA.jpeg?v=20260811-1756';
@@ -77,6 +78,12 @@ const META = {
 };
 
 const PROXY_PATHS = new Set(Object.keys(META));
+const NO_STORE_UI_PATHS = new Set([
+  '/areas',
+  '/publicidad-reservas',
+  '/facturas-contabilidad',
+  '/administracion'
+]);
 
 function setSecurityHeaders(res) {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -95,6 +102,18 @@ function escapeHtml(value) {
 
 function setTag(html, regex, replacement) {
   return regex.test(html) ? html.replace(regex, replacement) : html.replace('</head>', `${replacement}</head>`);
+}
+
+function versionFrontendScripts(html) {
+  return html
+    .replace(
+      /\/area\.js(?:\?[^"'<>\s]*)?/gi,
+      `/area.js?v=${FRONTEND_ASSET_VERSION}`
+    )
+    .replace(
+      /\/site-fix\.js(?:\?[^"'<>\s]*)?/gi,
+      `/site-fix.js?v=${FRONTEND_ASSET_VERSION}`
+    );
 }
 
 function restaurantSchema(description) {
@@ -395,6 +414,7 @@ function patchHtml(html, path) {
     html = addSeoNavigation(html);
   }
 
+  html = versionFrontendScripts(html);
   return html.replace('</head>', `${extras}${schemaTag}</head>`);
 }
 
@@ -484,7 +504,12 @@ module.exports = async function handler(req, res) {
 
     res.statusCode = upstream.status;
     res.setHeader('Content-Type', contentType);
-    res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=3600');
+    res.setHeader(
+      'Cache-Control',
+      NO_STORE_UI_PATHS.has(path)
+        ? 'no-store'
+        : 'public, s-maxage=300, stale-while-revalidate=3600'
+    );
     res.setHeader('Vary', 'Accept-Encoding');
     const meta = META[path];
     if (meta) {
