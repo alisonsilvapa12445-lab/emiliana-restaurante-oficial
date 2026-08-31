@@ -57,7 +57,7 @@ assert.equal(
 
 assert.match(html, /<title>Laboratorio del Bot \| Emiliana<\/title>/);
 assert.match(html, /Consumo de IA: S\/ 0/);
-assert.match(html, /No se creó ninguna reserva real/);
+assert.match(html, /Enviar el mensaje no confirma la reserva/);
 assert.match(html, /connect-src 'none'/);
 assert.match(html, /noindex,nofollow,noarchive/);
 assert.doesNotMatch(html, /<form\b/i, 'No debe existir un formulario enviable.');
@@ -71,8 +71,11 @@ assert.doesNotMatch(html, /<img[^>]+src=/i);
 
 const allowedUserNavigation = new Set([
   'https://emiliana-carta-2026-2027.vercel.app/',
+  'https://emiliana-carta-2026.vercel.app/#buffet-criolla',
+  'https://emiliana-guia-2026.vercel.app/',
   'https://www.emilianarestaurantebuffetcusco.com.pe/',
   'https://www.google.com/maps/search/?api=1&query=Emiliana+Restaurant+Av.+Tullumayo+235+Cusco',
+  'https://wa.me/51951520753',
   'https://wa.me/51951520753?text=Hola%20Emiliana%2C%20quisiera%20informaci%C3%B3n%20sobre%20una%20reserva.',
 ]);
 const discoveredExternalUrls = new Set(
@@ -81,7 +84,7 @@ const discoveredExternalUrls = new Set(
 assert.deepEqual(
   discoveredExternalUrls,
   allowedUserNavigation,
-  'Solo se permiten los enlaces de navegación aprobados para carta, web, mapa y WhatsApp.',
+  'Solo se permiten los enlaces aprobados para carta, buffet, dossier, web, mapa y WhatsApp.',
 );
 assert.match(
   html,
@@ -93,6 +96,22 @@ assert.match(html, /I want to download the menu in Quechua/);
 assert.match(html, /Runasimipi mikhuna qillqata uraykachiyta munani/);
 assert.match(html, /const MENU_LANGUAGES = \[/);
 assert.match(html, /id="messageInput"/);
+assert.match(html, /id="homeButton"/);
+assert.match(html, /asksDossier/);
+assert.match(html, /dossiert/);
+assert.match(html, /asksBuffet/);
+assert.match(html, /renderDossier/);
+assert.match(html, /renderMenuOverview/);
+assert.match(html, /Enviar solicitud por WhatsApp/);
+assert.match(html, /window\.open\(LINKS\.whatsappBase/);
+
+const homeActions = html.match(/const actions=\[([\s\S]*?)\];/);
+assert.ok(homeActions, 'Debe existir el menú principal de acciones.');
+assert.equal(
+  (homeActions[1].match(/\["/g) || []).length,
+  4,
+  'El inicio debe limitarse a cuatro acciones esenciales para mantener compatibilidad omnicanal.',
+);
 
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
 assert.equal(scripts.length, 1, 'Debe existir un único script local incrustado.');

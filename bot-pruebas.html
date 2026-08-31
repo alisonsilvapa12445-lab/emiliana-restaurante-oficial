@@ -93,7 +93,8 @@
     .avatar::after{position:absolute;right:-2px;bottom:-2px;width:10px;height:10px;border:2px solid #24151a;border-radius:50%;background:var(--green);content:""}
     .assistant-copy{min-width:0}.assistant-copy strong,.assistant-copy span{display:block}
     .assistant-copy strong{font-size:13px}.assistant-copy span{overflow:hidden;color:var(--muted);font-size:10px;text-overflow:ellipsis;white-space:nowrap}
-    .metrics{display:flex;gap:7px}.metric{padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.025);font-size:9px;font-weight:900;text-transform:uppercase}.metric strong{color:var(--green)}
+    .head-actions,.metrics{display:flex;align-items:center;gap:7px}.metric{padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.025);font-size:9px;font-weight:900;text-transform:uppercase}.metric strong{color:var(--green)}
+    .home-btn{min-height:34px;padding:7px 11px;border:1px solid rgba(223,180,95,.28);border-radius:11px;color:var(--gold2);background:rgba(223,180,95,.07);cursor:pointer;font-size:10px;font-weight:900}
     .messages{display:flex;min-height:0;flex-direction:column;gap:13px;overflow-y:auto;padding:23px clamp(15px,4vw,34px) 16px;scroll-behavior:smooth;scrollbar-color:rgba(223,180,95,.32) transparent}
     .message{display:flex;max-width:min(88%,660px);gap:8px;align-items:flex-end;animation:rise .19s ease-out}
     .message--user{align-self:flex-end;flex-direction:row-reverse}
@@ -110,7 +111,7 @@
     .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
     .card h2{margin:0;font:700 21px/1.15 Georgia,serif}.desc{margin:5px 0 0;color:var(--muted);font-size:11px}
     .badge{flex:0 0 auto;padding:5px 8px;border:1px solid rgba(223,180,95,.22);border-radius:999px;color:var(--gold2);background:rgba(223,180,95,.08);font-size:9px;font-weight:950;letter-spacing:.06em;text-transform:uppercase}
-    .action-grid,.menu-languages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .action-grid,.menu-languages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
     .menu-languages{grid-template-columns:repeat(4,minmax(0,1fr))}
     .choice{
       min-height:72px;padding:12px;border:1px solid var(--line);border-radius:15px;color:var(--ink);
@@ -147,7 +148,7 @@
     @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
     @media(max-width:940px){.workspace{grid-template-columns:1fr}.control{min-height:auto}.control-foot{margin-top:15px}.prompt-list{grid-template-columns:repeat(3,1fr)}.chat{min-height:760px}}
-    @media(max-width:690px){.action-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.menu-languages{grid-template-columns:repeat(2,minmax(0,1fr))}.prompt-list{grid-template-columns:1fr}.metrics .metric:first-child{display:none}}
+    @media(max-width:690px){.menu-languages{grid-template-columns:repeat(2,minmax(0,1fr))}.prompt-list{grid-template-columns:1fr}.metrics{display:none}}
     @media(max-width:520px){.shell{width:min(100% - 16px,1380px);padding-top:12px}.topbar{align-items:flex-start;flex-direction:column}.status-row{justify-content:flex-start}.control{padding:20px}.chat-head{padding:13px}.metrics{display:none}.message{max-width:96%}.card{padding:15px}.action-grid,.fields{grid-template-columns:1fr}.full{grid-column:auto}.composer{padding-inline:12px}.send{min-width:58px;padding-inline:10px}.actions{align-items:stretch;flex-direction:column-reverse}.button,.link-button{width:100%}}
   </style>
 </head>
@@ -189,7 +190,7 @@
             <div class="avatar" aria-hidden="true">E</div>
             <div class="assistant-copy"><strong>Bot Oficial Emiliana</strong><span>Respuestas preprogramadas · Español, English y Runasimi</span></div>
           </div>
-          <div class="metrics"><span class="metric">Red automática: <strong>OFF</strong></span><span class="metric">IA: <strong>S/ 0</strong></span></div>
+          <div class="head-actions"><div class="metrics"><span class="metric">Red automática: <strong>OFF</strong></span><span class="metric">IA: <strong>S/ 0</strong></span></div><button class="home-btn" id="homeButton" type="button">⌂ Inicio</button></div>
         </header>
         <div class="messages" id="messages" aria-live="polite" aria-label="Conversación de prueba"></div>
         <div class="interactive" id="interactiveCard"></div>
@@ -208,8 +209,11 @@
 
       const LINKS = Object.freeze({
         menu: "https://emiliana-carta-2026-2027.vercel.app/",
+        buffet: "https://emiliana-carta-2026.vercel.app/#buffet-criolla",
+        dossier: "https://emiliana-guia-2026.vercel.app/",
         website: "https://www.emilianarestaurantebuffetcusco.com.pe/",
         maps: "https://www.google.com/maps/search/?api=1&query=Emiliana+Restaurant+Av.+Tullumayo+235+Cusco",
+        whatsappBase: "https://wa.me/51951520753",
         whatsapp: "https://wa.me/51951520753?text=Hola%20Emiliana%2C%20quisiera%20informaci%C3%B3n%20sobre%20una%20reserva."
       });
 
@@ -235,14 +239,16 @@
           labTitle:"Prueba una atención más humana.",
           labLead:"Escribe preguntas o usa los cuadros. Las respuestas están programadas y funcionan sin inteligencia artificial.",
           costText:"Sin API, sin base de datos y sin envío de información.",
-          languageLabel:"Idioma del bot",tryLabel:"Prueba escribiendo",
+          languageLabel:"Idioma del bot",tryLabel:"Prueba escribiendo",home:"Inicio",
           safeNote:"Usa datos ficticios. Los enlaces se abren solo cuando tú los pulsas; ninguna API funciona en segundo plano.",
           reset:"Reiniciar toda la demostración",placeholder:"Escribe: Quiero descargar la carta en quechua",send:"Enviar",
           foot:"DEMOSTRACIÓN · No guarda datos · No crea reservas · No llama a OpenAI",
-          welcome:"¡Hola! Soy el asistente de Emiliana. Puedo ayudarte con la carta, idiomas, precios, horarios, ubicación y una reserva de prueba. ¿Qué deseas hacer?",
+          welcome:"¡Hola! Soy el asistente de Emiliana. Puedo ayudarte con la carta, el buffet, el dossier, información del restaurante y una reserva rápida. ¿Qué deseas hacer?",
           choose:"¿Qué deseas consultar?",chooseDesc:"También puedes escribir tu pregunta con tus propias palabras.",demo:"S/ 0 IA",
-          menu:"Ver o descargar la carta",menuSub:"Elige el idioma del PDF",
-          reserve:"Reservar una mesa",reserveSub:"Simulación guiada en 3 pasos",
+          menu:"Carta y buffet",menuSub:"Precios, descarga y opciones adicionales",
+          reserve:"Reservar rápido",reserveSub:"Solicitud preparada para WhatsApp",
+          dossier:"Ver o descargar el dossier",dossierSub:"Información para agencias y grupos",
+          info:"Información",infoSub:"Horario, dirección y página oficial",
           prices:"Precios",pricesSub:"Consulta la carta oficial",
           hours:"Horarios",hoursSub:"Información oficial publicada",
           location:"Ubicación",locationSub:"Dirección y mapa",
@@ -250,43 +256,50 @@
           human:"Hablar con el equipo",humanSub:"Continuar por WhatsApp",
           security:"¿Por qué no gasta IA?",securitySub:"Revisa la protección",other:"Elige otra función para continuar.",
           menuAsk:"¿En qué idioma deseas ver y descargar la carta?",menuAskDesc:"La carta traduce el contenido y después permite guardarlo como PDF.",
+          menuOverview:"Claro. Aquí tienes la carta oficial con precios y opción de descarga. Además, puedes ver más menús y opciones del buffet criollo en el enlace complementario; ese catálogo no muestra precios. Si alguno te interesa, dime cuál y te ayudaremos con la reserva.",
+          menuOverviewTitle:"Carta y opciones de buffet",mainMenuLabel:"Carta oficial con precios ↗",buffetMenuLabel:"Más menús y buffet · sin precios ↗",
+          buffetText:"Aquí puedes ver más menús y opciones del buffet criollo. Este catálogo es complementario y no muestra precios. Si te interesa alguno, dinos cuál o inicia una reserva rápida.",buffetTitle:"Menús y buffet criollo",
+          dossierText:"Aquí tienes el dossier oficial de Emiliana para agencias, grupos y aliados. Puedes verlo y descargarlo desde el enlace.",dossierTitle:"Dossier oficial",openDossier:"Ver y descargar dossier ↗",
           menuSelected:"Preparé el acceso a la carta en {language}.",menuGuideTitle:"Carta en {language}",menuGuideDesc:"Pasos para visualizarla y guardarla como PDF.",
           stepOpen:"Abre la carta oficial en una pestaña nueva.",stepLanguage:"En la barra superior, elige {language} en el selector de idioma.",stepDownload:"Pulsa “Descargar PDF” y guarda o imprime la carta traducida.",
           menuTruth:"La carta actual se traduce dentro de su propia página. Todavía no existe un PDF fijo separado para cada idioma.",
           quechuaWarning:"La traducción automática al quechua debe ser revisada por una persona que domine runasimi antes de usarse como documento comercial definitivo.",
-          openMenu:"Abrir carta multilingüe ↗",chooseOther:"Elegir otro idioma",back:"Volver",
+          openMenu:"Abrir carta multilingüe ↗",chooseOther:"Elegir otro idioma",back:"Volver al inicio",
           pricesText:"Los precios oficiales vigentes aparecen en la carta gastronómica. El bot no copia montos para evitar mostrar precios desactualizados.",
           hoursText:"Horario publicado: todos los días, de 12:00 a 22:00.",
           locationText:"Emiliana Restaurant Cultural Buffet\nAv. Tullumayo 235 · Cusco 08002",
           websiteText:"Esta es la página oficial de Emiliana Restaurante Buffet Cultural Cusco.",
-          humanText:"Puedes continuar con el equipo de Reservas por WhatsApp al +51 951 520 753.",
+          humanText:"Puedes continuar con el equipo de Reservas por WhatsApp al +51 951 520 753.",generalInfoText:"Todos los días, de 12:00 a 22:00. Estamos en Av. Tullumayo 235, Cusco 08002.",
           openWebsite:"Abrir página oficial ↗",openMap:"Abrir ubicación ↗",openWhatsapp:"Abrir WhatsApp ↗",infoSource:"Información oficial",
-          reserveStart:"Empecemos la simulación. Nada se guardará ni se enviará.",
-          visitTitle:"Datos de la visita",visitDesc:"Paso 1 de 3 · Usa información ficticia.",people:"Número de personas",service:"Tipo de servicio",select:"Selecciona",
+          reserveStart:"Para hacerlo rápido, completa solo personas, fecha, hora y servicio. Nada se guardará aquí; al continuar se abrirá WhatsApp con la solicitud preparada.",
+          visitTitle:"Reserva rápida",visitDesc:"Un solo paso · Quedará pendiente hasta que el equipo la confirme.",people:"Número de personas",service:"Tipo de servicio",select:"Selecciona",
           serviceBuffet:"Buffet cultural",serviceTable:"Reserva de mesa",serviceGroup:"Grupo o evento",continue:"Continuar",required:"Completa los campos obligatorios para continuar.",
           dateMessage:"Ahora selecciona una fecha y hora de prueba.",dateTitle:"Fecha y hora",dateDesc:"Paso 2 de 3 · No se consulta disponibilidad real.",date:"Fecha",time:"Hora",
           contactMessage:"Completa datos ficticios de contacto.",contactTitle:"Contacto y detalles",contactDesc:"Paso 3 de 3 · Los datos viven solo en esta pestaña.",
-          name:"Nombre",phone:"Teléfono",email:"Correo opcional",notes:"Alergias, restricciones u observaciones",review:"Revisar reserva",
+          name:"Nombre",nameOptional:"Nombre opcional",phone:"Teléfono",email:"Correo opcional",notes:"Preferencias o restricciones (opcional)",review:"Revisar reserva",sendWhatsApp:"Enviar solicitud por WhatsApp ↗",
+          reservationPending:"Abriré WhatsApp con la solicitud preparada. Enviar el mensaje no confirma la reserva; espera la respuesta del equipo.",
           reviewMessage:"Revisa todo antes de confirmar la simulación.",reviewTitle:"Resumen de la reserva",reviewDesc:"Confirmar no crea una reserva real.",confirm:"Confirmar simulación",simulated:"SIMULADO",noData:"No indicado",
           successMessage:"La prueba terminó correctamente. No se creó ninguna reserva real.",successTitle:"Reserva de prueba completada",successText:"Código DEMO-EMI-0001 · S/ 0 consumidos en OpenAI.",tryAnother:"Probar otra función",
           securityText:"Este laboratorio usa reglas locales y respuestas preprogramadas. La política bloquea OpenAI, bases de datos, formularios y conexiones automáticas.",
           securityTitle:"Protección de consumo",api:"API de OpenAI",database:"Base de datos",automaticNetwork:"Conexiones automáticas",disabled:"Desactivada",blocked:"Bloqueadas",localMemory:"Solo memoria temporal",
-          prompts:["Quiero descargar la carta en quechua","¿Cuáles son los horarios?","I want to make a reservation"],
-          unknown:"No encontré una respuesta preprogramada exacta. Puedo ayudarte con carta, idiomas, precios, horarios, ubicación, página web, WhatsApp o una reserva de prueba.",
+          prompts:["Quiero ver la carta","Quiero descargar el dossier","Quiero reservar una mesa"],
+          unknown:"No encontré una respuesta preprogramada exacta. Puedo ayudarte con la carta, buffet, dossier, horarios, ubicación, página web, WhatsApp o una reserva rápida.",
           languageChanged:"Perfecto. Continuaré en español.",greeting:"¡Hola! Elige una opción o escribe lo que necesitas."
         },
         en: {
           labTitle:"Test a more human experience.",
           labLead:"Type a question or use the cards. Every answer is preprogrammed and works without artificial intelligence.",
           costText:"No API, no database and no information is sent.",
-          languageLabel:"Bot language",tryLabel:"Try typing",
+          languageLabel:"Bot language",tryLabel:"Try typing",home:"Home",
           safeNote:"Use fictional data. Links open only when you click them; no API runs in the background.",
           reset:"Restart the entire demonstration",placeholder:"Type: I want to download the menu in Quechua",send:"Send",
           foot:"DEMONSTRATION · No data saved · No reservations created · No OpenAI calls",
-          welcome:"Hello! I am Emiliana's assistant. I can help with the menu, languages, prices, opening hours, location and a test reservation. What would you like to do?",
+          welcome:"Hello! I am Emiliana's assistant. I can help with the menu, buffet, dossier, restaurant information and a quick reservation. What would you like to do?",
           choose:"What would you like to check?",chooseDesc:"You can also type your question in your own words.",demo:"S/ 0 AI",
-          menu:"View or download the menu",menuSub:"Choose the PDF language",
-          reserve:"Reserve a table",reserveSub:"Three-step guided simulation",
+          menu:"Menu and buffet",menuSub:"Prices, downloads and more options",
+          reserve:"Quick reservation",reserveSub:"Prepared request for WhatsApp",
+          dossier:"View or download the dossier",dossierSub:"Information for agencies and groups",
+          info:"Information",infoSub:"Hours, address and official website",
           prices:"Prices",pricesSub:"Check the official menu",
           hours:"Opening hours",hoursSub:"Official published information",
           location:"Location",locationSub:"Address and map",
@@ -294,43 +307,50 @@
           human:"Talk to our team",humanSub:"Continue on WhatsApp",
           security:"Why does it use no AI?",securitySub:"Review the safeguards",other:"Choose another function to continue.",
           menuAsk:"Which language would you like for viewing and downloading the menu?",menuAskDesc:"The menu translates its content and then lets you save it as a PDF.",
+          menuOverview:"Of course. Here is the official menu with prices and a download option. You can also explore more menus and Creole buffet options in the complementary link; that catalogue does not show prices. Tell us which option interests you and we will help with the reservation.",
+          menuOverviewTitle:"Menu and buffet options",mainMenuLabel:"Official menu with prices ↗",buffetMenuLabel:"More menus and buffet · no prices ↗",
+          buffetText:"Here you can explore more menus and Creole buffet options. This complementary catalogue does not show prices. Tell us which one interests you or start a quick reservation.",buffetTitle:"Menus and Creole buffet",
+          dossierText:"Here is Emiliana's official dossier for agencies, groups and partners. You can view and download it from the link.",dossierTitle:"Official dossier",openDossier:"View and download dossier ↗",
           menuSelected:"I prepared access to the menu in {language}.",menuGuideTitle:"Menu in {language}",menuGuideDesc:"Steps to view it and save it as a PDF.",
           stepOpen:"Open the official menu in a new tab.",stepLanguage:"In the top bar, choose {language} from the language selector.",stepDownload:"Press “Download PDF”, then save or print the translated menu.",
           menuTruth:"The current menu is translated inside its own page. There is not yet a separate fixed PDF for every language.",
           quechuaWarning:"The automatic Quechua translation should be reviewed by a fluent Runasimi speaker before it is used as a final commercial document.",
-          openMenu:"Open multilingual menu ↗",chooseOther:"Choose another language",back:"Back",
+          openMenu:"Open multilingual menu ↗",chooseOther:"Choose another language",back:"Back to home",
           pricesText:"Current official prices are shown in the gastronomic menu. The bot does not copy prices, so it cannot show outdated amounts.",
           hoursText:"Published hours: every day from 12:00 to 22:00.",
           locationText:"Emiliana Restaurant Cultural Buffet\nAv. Tullumayo 235 · Cusco 08002",
           websiteText:"This is the official website of Emiliana Restaurante Buffet Cultural Cusco.",
-          humanText:"You can continue with the Reservations team on WhatsApp at +51 951 520 753.",
+          humanText:"You can continue with the Reservations team on WhatsApp at +51 951 520 753.",generalInfoText:"Open every day from 12:00 to 22:00. We are at Av. Tullumayo 235, Cusco 08002.",
           openWebsite:"Open official website ↗",openMap:"Open location ↗",openWhatsapp:"Open WhatsApp ↗",infoSource:"Official information",
-          reserveStart:"Let's start the simulation. Nothing will be stored or sent.",
-          visitTitle:"Visit details",visitDesc:"Step 1 of 3 · Use fictional information.",people:"Number of guests",service:"Service type",select:"Select",
+          reserveStart:"For a quick request, enter only the number of guests, date, time and service. Nothing is stored here; WhatsApp will open with the request prepared.",
+          visitTitle:"Quick reservation",visitDesc:"One step · It remains pending until the team confirms it.",people:"Number of guests",service:"Service type",select:"Select",
           serviceBuffet:"Cultural buffet",serviceTable:"Table reservation",serviceGroup:"Group or event",continue:"Continue",required:"Complete the required fields to continue.",
           dateMessage:"Now select a test date and time.",dateTitle:"Date and time",dateDesc:"Step 2 of 3 · Real availability is not checked.",date:"Date",time:"Time",
           contactMessage:"Enter fictional contact details.",contactTitle:"Contact and details",contactDesc:"Step 3 of 3 · Data exists only in this tab.",
-          name:"Name",phone:"Phone",email:"Optional email",notes:"Allergies, dietary restrictions or notes",review:"Review reservation",
+          name:"Name",nameOptional:"Optional name",phone:"Phone",email:"Optional email",notes:"Preferences or restrictions (optional)",review:"Review reservation",sendWhatsApp:"Send request on WhatsApp ↗",
+          reservationPending:"WhatsApp will open with the prepared request. Sending it does not confirm the reservation; please wait for the team's reply.",
           reviewMessage:"Review everything before confirming the simulation.",reviewTitle:"Reservation summary",reviewDesc:"Confirming does not create a real reservation.",confirm:"Confirm simulation",simulated:"SIMULATED",noData:"Not provided",
           successMessage:"The test was completed successfully. No real reservation was created.",successTitle:"Test reservation completed",successText:"Code DEMO-EMI-0001 · S/ 0 spent on OpenAI.",tryAnother:"Try another function",
           securityText:"This laboratory uses local rules and preprogrammed answers. Its policy blocks OpenAI, databases, forms and automatic connections.",
           securityTitle:"Cost protection",api:"OpenAI API",database:"Database",automaticNetwork:"Automatic connections",disabled:"Disabled",blocked:"Blocked",localMemory:"Temporary memory only",
-          prompts:["I want to download the menu in Quechua","What are your opening hours?","Quiero reservar una mesa"],
-          unknown:"I could not find an exact preprogrammed answer. I can help with the menu, languages, prices, opening hours, location, website, WhatsApp or a test reservation.",
+          prompts:["I want to view the menu","I want to download the dossier","I want to reserve a table"],
+          unknown:"I could not find an exact preprogrammed answer. I can help with the menu, buffet, dossier, opening hours, location, website, WhatsApp or a quick reservation.",
           languageChanged:"Perfect. I will continue in English.",greeting:"Hello! Choose an option or type what you need."
         },
         qu: {
           labTitle:"Aswan allin yanapakuyta malliy.",
           labLead:"Tapuyta qillqay utaq tawa k'uchukunata akllay. Kutichiykuna ñawpaqmantan wakichisqa, mana IA nisqawanmi llamk'an.",
           costText:"Mana API, mana datos waqaychana, mana willakuy apachiy.",
-          languageLabel:"Botpa simin",tryLabel:"Kayhinata qillqay",
+          languageLabel:"Botpa simin",tryLabel:"Kayhinata qillqay",home:"Qallariy",
           safeNote:"Yant'a willakuykunallata churay. Enlacekuna ñit'isqaykipi qhawarinqa; qhipapiqa manan API llamk'anchu.",
           reset:"Llapan malliyta musuqmanta qallariy",placeholder:"Qillqay: Runasimipi mikhuna qillqata uraykachiyta munani",send:"Apachiy",
           foot:"MALLIY · Mana datos waqaychanchu · Mana reserva ruwanchu · Mana OpenAI waqyaychu",
           welcome:"Rimaykullayki! Emiliana-pa yanapakuqnin kani. Mikhuna qillqa, simikuna, chaninkuna, pacha, maypi kasqayku, chaymanta reserva malliywan yanapasqayki. Imatan munanki?",
           choose:"Imatan tapuyta munanki?",chooseDesc:"Kikin rimayniykiwanpas tapuyta qillqayta atinki.",demo:"S/ 0 IA",
-          menu:"Mikhuna qillqata qaway utaq uraykachiy",menuSub:"PDF-pa siminta akllay",
-          reserve:"Misata waqaychay",reserveSub:"Kimsa tatkipi malliy",
+          menu:"Mikhuna qillqa chaymanta buffet",menuSub:"Chaninkuna, uraykachiy, astawan akllanakuna",
+          reserve:"Utqaylla reservay",reserveSub:"WhatsApp-paq wakichisqa mañakuy",
+          dossier:"Dossierta qaway utaq uraykachiy",dossierSub:"Agenciakunapaq chaymanta huñukunapaq",
+          info:"Willakuy",infoSub:"Pacha, dirección chaymanta oficial web",
           prices:"Chaninkuna",pricesSub:"Oficial mikhuna qillqata qaway",
           hours:"Llamk'ana pacha",hoursSub:"Oficial willakuy",
           location:"Maypi kasqayku",locationSub:"Dirección chaymanta mapa",
@@ -342,25 +362,30 @@
           stepOpen:"Oficial mikhuna qillqata musuq pestañapi kichay.",stepLanguage:"Hana barrapi {language} simita akllay.",stepDownload:"“Descargar PDF” nisqata ñit'iy, chaymanta tikrasqa qillqata waqaychay utaq imprimiy.",
           menuTruth:"Kunan mikhuna qillqa kikin web p'anqapin tikrakun. Manaraqmi sapa simipaq huk PDF t'inkisqa kanchu.",
           quechuaWarning:"Runasimiman kikillan tikrasqa qillqa, qhatuypaq apaykachakunanpaq, runasimi yachaq runawan qhawachiy.",
-          openMenu:"Achka simiyuq mikhuna qillqata kichay ↗",chooseOther:"Huk simita akllay",back:"Kutiy",
+          menuOverview:"Oficial mikhuna qillqapi chaninkunata chaymanta uraykachiyta qhaway. Huktawan buffet criollo akllanakunata qhawayta atinki; chaypiqa manan chaninkuna kanchu. Mayqinmi munasqayki chayta niwayku, reservaypi yanapasqayku.",
+          menuOverviewTitle:"Mikhuna qillqa chaymanta buffet",mainMenuLabel:"Chaninniyuq oficial carta ↗",buffetMenuLabel:"Astawan menú chaymanta buffet · mana chaninniyuq ↗",
+          buffetText:"Kaypi astawan menú chaymanta buffet criollo akllanakunata qhaway. Kay catálogoqa manan chaninkunata rikuchinchu. Mayqinmi munasqayki chayta niwayku.",buffetTitle:"Menúkuna chaymanta buffet criollo",
+          dossierText:"Kaymi Emiliana-pa oficial dossiernin, agenciakunapaq chaymanta huñukunapaq. Enlacepi qhawayta utaq uraykachiyta atinki.",dossierTitle:"Oficial dossier",openDossier:"Dossierta qaway chaymanta uraykachiy ↗",
+          openMenu:"Achka simiyuq mikhuna qillqata kichay ↗",chooseOther:"Huk simita akllay",back:"Qallariyman kutiy",
           pricesText:"Kunan oficial chaninkuna mikhuna qillqapi kachkan. Botqa manan chaninkunata copiaykuchu, ama ñawpa chaninta rikuchinanpaq.",
           hoursText:"Willakusqa pacha: sapa p'unchaw 12:00 pachamanta 22:00 pachakama.",
           locationText:"Emiliana Restaurant Cultural Buffet\nAv. Tullumayo 235 · Cusco 08002",
           websiteText:"Kaymi Emiliana Restaurante Buffet Cultural Cusco-pa oficial web p'anqan.",
-          humanText:"Reservas llamk'aqkunawan WhatsApp nisqapi rimayta atinki: +51 951 520 753.",
+          humanText:"Reservas llamk'aqkunawan WhatsApp nisqapi rimayta atinki: +51 951 520 753.",generalInfoText:"Sapa p'unchaw 12:00 pachamanta 22:00 pachakama. Av. Tullumayo 235, Cusco 08002 nisqapi kachkayku.",
           openWebsite:"Oficial webta kichay ↗",openMap:"Maypi kasqaykuta kichay ↗",openWhatsapp:"WhatsAppta kichay ↗",infoSource:"Oficial willakuy",
-          reserveStart:"Reserva malliyta qallarisun. Manan imapas waqaychasqachu nitaq apachisqachu kanqa.",
-          visitTitle:"Watukuypa willakuynin",visitDesc:"1/3 tatki · Yant'a willakuyta churay.",people:"Hayk'a runakuna",service:"Ima yanapakuy",select:"Akllay",
+          reserveStart:"Utqaylla reservanapaq hayk'a runa, p'unchaw, pacha chaymanta yanapakuyta churay. Kaypiqa manan waqaychakunchu; WhatsApp wakichisqa mañakuywan kichakunqa.",
+          visitTitle:"Utqaylla reserva",visitDesc:"Huk tatkillapi · Llamk'aqkuna takyachinankama suyanqa.",people:"Hayk'a runakuna",service:"Ima yanapakuy",select:"Akllay",
           serviceBuffet:"Buffet cultural",serviceTable:"Misa waqaychay",serviceGroup:"Huñu utaq evento",continue:"Qatipay",required:"Qatipanaykipaq ch'usaq k'uchukunata hunt'achiy.",
           dateMessage:"Kunan p'unchawta chaymanta pachata akllay.",dateTitle:"P'unchaw chaymanta pacha",dateDesc:"2/3 tatki · Cheqaq disponibilidadta manan qhawanchu.",date:"P'unchaw",time:"Pacha",
           contactMessage:"Yant'a contacto willakuyta hunt'achiy.",contactTitle:"Contacto chaymanta detalles",contactDesc:"3/3 tatki · Kay pestañallapin willakuy kachkan.",
-          name:"Suti",phone:"Telefono",email:"Correo (munaspa)",notes:"Alergia, mikhuy hark'ay utaq willakuy",review:"Reservata qhaway",
+          name:"Suti",nameOptional:"Suti (munaspa)",phone:"Telefono",email:"Correo (munaspa)",notes:"Munay utaq mikhuy hark'ay (munaspa)",review:"Reservata qhaway",sendWhatsApp:"WhatsApp-pi mañakuyta apachiy ↗",
+          reservationPending:"WhatsApp wakichisqa mañakuywan kichakunqa. Mensajeta apachiyqa manaraq reservata takyachinchu; llamk'aqkunapa kutichiyninta suyay.",
           reviewMessage:"Malliyta takyachinaykipaq llapanta qhaway.",reviewTitle:"Reservapa pisillapi willakuynin",reviewDesc:"Takyachiyqa manan cheqaq reservata ruwanchu.",confirm:"Malliyta takyachiy",simulated:"MALLISQA",noData:"Mana willakusqa",
           successMessage:"Malliyqa allintan tukurqan. Manan cheqaq reserva ruwasqachu.",successTitle:"Reserva malliy tukusqa",successText:"Código DEMO-EMI-0001 · OpenAI-pi S/ 0 gastasqa.",tryAnother:"Huk llamk'ayta malliy",
           securityText:"Kay laboratorioqa local kamachikunawan, ñawpaqmantan wakichisqa kutichiykunawan llamk'an. OpenAI, datos waqaychana, formulariokuna chaymanta conexiones nisqata hark'an.",
           securityTitle:"Gasto amachay",api:"OpenAI API",database:"Datos waqaychana",automaticNetwork:"Qhipa conexiones",disabled:"Wichq'asqa",blocked:"Hark'asqa",localMemory:"Pisi pacha yuyaylla",
-          prompts:["Runasimipi mikhuna qillqata uraykachiyta munani","Ima pachakunapin kichasqa?","I want to reserve a table"],
-          unknown:"Manan kikin wakichisqa kutichiyta tarirqanichu. Mikhuna qillqa, simikuna, chaninkuna, pacha, maypi kasqayku, web, WhatsApp utaq reserva malliywan yanapasqayki.",
+          prompts:["Mikhuna qillqata qawayta munani","Dossierta uraykachiyta munani","Misata reservayta munani"],
+          unknown:"Manan kikin wakichisqa kutichiyta tarirqanichu. Mikhuna qillqa, buffet, dossier, pacha, maypi kasqayku, web, WhatsApp utaq utqay reserva nisqawan yanapasqayki.",
           languageChanged:"Allinmi. Runasimipi qatipasqayki.",greeting:"Rimaykullayki! Huk akllanata ñit'iy utaq imata munasqaykita qillqay."
         }
       };
@@ -371,6 +396,7 @@
         input:document.getElementById("messageInput"),
         send:document.getElementById("sendMessage"),
         reset:document.getElementById("resetDemo"),
+        home:document.getElementById("homeButton"),
         languageList:document.getElementById("languageList"),
         promptList:document.getElementById("promptList")
       };
@@ -405,7 +431,7 @@
         document.getElementById("tryLabel").textContent=t("tryLabel");
         document.getElementById("safeNote").textContent=t("safeNote");
         document.getElementById("activeLanguage").textContent=activeLanguage().short;
-        el.reset.textContent=t("reset");el.input.placeholder=t("placeholder");el.send.textContent=t("send");
+        el.reset.textContent=t("reset");el.home.textContent="⌂ "+t("home");el.input.placeholder=t("placeholder");el.send.textContent=t("send");
         document.getElementById("chatFoot").textContent=t("foot");
         renderLanguageButtons();renderPrompts();
       }
@@ -431,9 +457,7 @@
         if(!keep){el.messages.innerHTML="";addMessage("bot",t("welcome"))}else addMessage("bot",t("other"));
         const actions=[
           ["menu","▤",t("menu"),t("menuSub")],["reserve","◫",t("reserve"),t("reserveSub")],
-          ["prices","S/",t("prices"),t("pricesSub")],["hours","◷",t("hours"),t("hoursSub")],
-          ["location","⌖",t("location"),t("locationSub")],["website","↗",t("website"),t("websiteSub")],
-          ["human","◇",t("human"),t("humanSub")],["security","◎",t("security"),t("securitySub")]
+          ["dossier","▧",t("dossier"),t("dossierSub")],["info","⌖",t("info"),t("infoSub")]
         ];
         setCard('<section class="card" aria-labelledby="homeTitle"><div class="card-head"><div><h2 id="homeTitle">'+esc(t("choose"))+'</h2><p class="desc">'+esc(t("chooseDesc"))+'</p></div><span class="badge">'+esc(t("demo"))+'</span></div><div class="action-grid">'+actions.map(function(a){return '<button class="choice" type="button" data-action="'+a[0]+'"><span class="choice-icon">'+a[1]+"</span>"+esc(a[2])+"<small>"+esc(a[3])+"</small></button>"}).join("")+"</div></section>");
         el.interactive.querySelectorAll("[data-action]").forEach(function(button){
@@ -441,8 +465,10 @@
         });
       }
       function runAction(action){
-        if(action==="menu")renderMenuLanguages();
+        if(action==="menu")renderMenuOverview(false);
         if(action==="reserve")reservationOne();
+        if(action==="dossier")renderDossier();
+        if(action==="info")renderInfo("general");
         if(["prices","hours","location","website","human"].includes(action))renderInfo(action);
         if(action==="security")renderSecurity();
       }
@@ -456,25 +482,38 @@
         bindBack();
       }
       function menuLanguage(code){return MENU_LANGUAGES.find(function(item){return item.code===code})||MENU_LANGUAGES[0]}
+      function renderMenuOverview(focusBuffet){
+        const title=focusBuffet?t("buffetTitle"):t("menuOverviewTitle");
+        const message=focusBuffet?t("buffetText"):t("menuOverview");
+        addMessage("bot",message);
+        setCard('<section class="card" aria-labelledby="catalogTitle"><div class="card-head"><div><h2 id="catalogTitle">'+esc(title)+'</h2><p class="desc">'+esc(t("infoSource"))+'</p></div><span class="badge">'+(focusBuffet?'SIN PRECIOS':'OFICIAL')+'</span></div><div class="notice">'+esc(message)+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button>'+externalLink(LINKS.menu,t("mainMenuLabel"),focusBuffet?"secondary":"primary")+externalLink(LINKS.buffet,t("buffetMenuLabel"),focusBuffet?"primary":"secondary")+'</div></section>');
+        bindBack();
+      }
+      function renderDossier(){
+        addMessage("bot",t("dossierText"));
+        setCard('<section class="card" aria-labelledby="dossierTitle"><div class="card-head"><div><h2 id="dossierTitle">'+esc(t("dossierTitle"))+'</h2><p class="desc">'+esc(t("dossierSub"))+'</p></div><span class="badge">PDF</span></div><div class="notice">'+esc(t("dossierText"))+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button>'+externalLink(LINKS.dossier,t("openDossier"),"primary")+'</div></section>');
+        bindBack();
+      }
       function renderMenuGuide(code){
         state.menuLang=code;
         const lang=menuLanguage(code);
         addMessage("user",lang.name+" · "+lang.native);
         addMessage("bot",format(t("menuSelected"),{language:lang.native}));
-        setCard('<section class="card" aria-labelledby="guideTitle"><div class="card-head"><div><h2 id="guideTitle">'+esc(format(t("menuGuideTitle"),{language:lang.native}))+'</h2><p class="desc">'+esc(t("menuGuideDesc"))+'</p></div><span class="badge">PDF · '+esc(lang.code.toUpperCase())+'</span></div><ol class="steps"><li class="step"><span class="step-number">01</span><span>'+esc(t("stepOpen"))+'</span></li><li class="step"><span class="step-number">02</span><span>'+esc(format(t("stepLanguage"),{language:lang.native}))+'</span></li><li class="step"><span class="step-number">03</span><span>'+esc(t("stepDownload"))+'</span></li></ol><div class="notice"><strong>Transparencia:</strong> '+esc(t("menuTruth"))+'</div>'+(code==="qu"?'<div class="warning"><strong>Runasimi:</strong> '+esc(t("quechuaWarning"))+"</div>":"")+'<div class="actions"><button class="button secondary" type="button" id="otherMenuLang">'+esc(t("chooseOther"))+"</button>"+externalLink(LINKS.menu,t("openMenu"),"primary")+"</div></section>");
+        setCard('<section class="card" aria-labelledby="guideTitle"><div class="card-head"><div><h2 id="guideTitle">'+esc(format(t("menuGuideTitle"),{language:lang.native}))+'</h2><p class="desc">'+esc(t("menuGuideDesc"))+'</p></div><span class="badge">PDF · '+esc(lang.code.toUpperCase())+'</span></div><ol class="steps"><li class="step"><span class="step-number">01</span><span>'+esc(t("stepOpen"))+'</span></li><li class="step"><span class="step-number">02</span><span>'+esc(format(t("stepLanguage"),{language:lang.native}))+'</span></li><li class="step"><span class="step-number">03</span><span>'+esc(t("stepDownload"))+'</span></li></ol><div class="notice"><strong>Transparencia:</strong> '+esc(t("menuTruth"))+'</div>'+(code==="qu"?'<div class="warning"><strong>Runasimi:</strong> '+esc(t("quechuaWarning"))+"</div>":"")+'<div class="notice">'+esc(t("buffetText"))+'</div><div class="actions"><button class="button secondary" type="button" id="otherMenuLang">'+esc(t("chooseOther"))+"</button>"+externalLink(LINKS.menu,t("openMenu"),"primary")+externalLink(LINKS.buffet,t("buffetMenuLabel"),"secondary")+"</div></section>");
         document.getElementById("otherMenuLang").addEventListener("click",renderMenuLanguages);
       }
 
       function renderInfo(type){
+        if(type==="prices"){renderMenuOverview(false);return}
         const cfg={
-          prices:{title:t("prices"),text:t("pricesText"),link:LINKS.menu,label:t("openMenu")},
+          general:{title:t("info"),text:t("generalInfoText"),link:LINKS.website,label:t("openWebsite"),secondLink:LINKS.maps,secondLabel:t("openMap")},
           hours:{title:t("hours"),text:t("hoursText")},
           location:{title:t("location"),text:t("locationText"),link:LINKS.maps,label:t("openMap")},
           website:{title:t("website"),text:t("websiteText"),link:LINKS.website,label:t("openWebsite")},
           human:{title:t("human"),text:t("humanText"),link:LINKS.whatsapp,label:t("openWhatsapp")}
         }[type];
         addMessage("bot",cfg.text);
-        setCard('<section class="card" aria-labelledby="infoTitle"><div class="card-head"><div><h2 id="infoTitle">'+esc(cfg.title)+'</h2><p class="desc">'+esc(t("infoSource"))+'</p></div><span class="badge">OFICIAL</span></div><div class="notice">'+esc(cfg.text)+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+"</button>"+(cfg.link?externalLink(cfg.link,cfg.label,"primary"):"")+"</div></section>");
+        setCard('<section class="card" aria-labelledby="infoTitle"><div class="card-head"><div><h2 id="infoTitle">'+esc(cfg.title)+'</h2><p class="desc">'+esc(t("infoSource"))+'</p></div><span class="badge">OFICIAL</span></div><div class="notice">'+esc(cfg.text)+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+"</button>"+(cfg.secondLink?externalLink(cfg.secondLink,cfg.secondLabel,"secondary"):"")+(cfg.link?externalLink(cfg.link,cfg.label,"primary"):"")+"</div></section>");
         bindBack();
       }
 
@@ -489,46 +528,22 @@
       }
       function reservationOne(){
         addMessage("bot",t("reserveStart"));
-        setCard('<section class="card" aria-labelledby="visitTitle"><div class="card-head"><div><h2 id="visitTitle">'+esc(t("visitTitle"))+'</h2><p class="desc">'+esc(t("visitDesc"))+'</p></div><span class="badge">1 / 3</span></div><div class="progress"><span style="width:33%"></span></div><div class="fields"><div class="field"><label for="partySize">'+esc(t("people"))+' <span>*</span></label><input id="partySize" type="number" min="1" max="200" inputmode="numeric" value="'+esc(state.reservation.people||"")+'"></div><div class="field"><label for="serviceType">'+esc(t("service"))+' <span>*</span></label><select id="serviceType"><option value="">'+esc(t("select"))+'</option><option value="buffet">'+esc(t("serviceBuffet"))+'</option><option value="table">'+esc(t("serviceTable"))+'</option><option value="group">'+esc(t("serviceGroup"))+'</option></select></div></div><p class="error" id="visitError" role="alert"></p><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="visitNext">'+esc(t("continue"))+"</button></div></section>");
+        setCard('<section class="card" aria-labelledby="visitTitle"><div class="card-head"><div><h2 id="visitTitle">'+esc(t("visitTitle"))+'</h2><p class="desc">'+esc(t("visitDesc"))+'</p></div><span class="badge">1 PASO</span></div><div class="progress"><span style="width:100%"></span></div><div class="fields"><div class="field"><label for="partySize">'+esc(t("people"))+' <span>*</span></label><input id="partySize" type="number" min="1" max="200" inputmode="numeric" value="'+esc(state.reservation.people||"")+'"></div><div class="field"><label for="serviceType">'+esc(t("service"))+' <span>*</span></label><select id="serviceType"><option value="">'+esc(t("select"))+'</option><option value="buffet">'+esc(t("serviceBuffet"))+'</option><option value="table">'+esc(t("serviceTable"))+'</option><option value="group">'+esc(t("serviceGroup"))+'</option></select></div><div class="field"><label for="resDate">'+esc(t("date"))+' <span>*</span></label><input id="resDate" type="date" min="'+today()+'" value="'+esc(state.reservation.date||"")+'"></div><div class="field"><label for="resTime">'+esc(t("time"))+' <span>*</span></label><input id="resTime" type="time" value="'+esc(state.reservation.time||"")+'"></div><div class="field full"><label for="customerName">'+esc(t("nameOptional"))+'</label><input id="customerName" type="text" maxlength="120" autocomplete="off" value="'+esc(state.reservation.name||"")+'"></div><div class="field full"><label for="customerNotes">'+esc(t("notes"))+'</label><textarea id="customerNotes" maxlength="500">'+esc(state.reservation.notes||"")+'</textarea></div></div><p class="error" id="visitError" role="alert"></p><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="reserveWhatsApp">'+esc(t("sendWhatsApp"))+"</button></div></section>");
         if(state.reservation.service)document.getElementById("serviceType").value=state.reservation.service;
-        document.getElementById("visitNext").addEventListener("click",function(){
-          const people=required("partySize","visitError"),service=required("serviceType","visitError");
-          if(!people||!service)return;state.reservation.people=people;state.reservation.service=service;reservationTwo();
+        document.getElementById("reserveWhatsApp").addEventListener("click",function(){
+          const people=required("partySize","visitError"),service=required("serviceType","visitError"),date=required("resDate","visitError"),time=required("resTime","visitError");
+          if(!people||!service||!date||!time)return;
+          state.reservation={people:people,service:service,date:date,time:time,name:document.getElementById("customerName").value.trim(),notes:document.getElementById("customerNotes").value.trim()};
+          const intro=state.uiLang==="en"?"Hello Emiliana, I would like to request a reservation.":state.uiLang==="qu"?"Rimaykullayki Emiliana, reservata mañakuyta munani.":"Hola Emiliana, quisiera solicitar una reserva.";
+          const pending=state.uiLang==="en"?"Pending confirmation by the Emiliana team.":state.uiLang==="qu"?"Emiliana llamk'aqkuna takyachinankama suyanqa.":"Pendiente de confirmación por el equipo de Emiliana.";
+          const message=[intro,t("name")+": "+(state.reservation.name||t("noData")),t("people")+": "+people,t("date")+": "+date,t("time")+": "+time,t("service")+": "+serviceName(service),t("notes")+": "+(state.reservation.notes||t("noData")),pending].join("\n");
+          addMessage("bot",t("reservationPending"));
+          const opened=window.open(LINKS.whatsappBase+"?text="+encodeURIComponent(message),"_blank","noopener,noreferrer");
+          if(opened)opened.opener=null;
         });bindBack();
-      }
-      function reservationTwo(){
-        addMessage("bot",t("dateMessage"));
-        setCard('<section class="card" aria-labelledby="dateTitle"><div class="card-head"><div><h2 id="dateTitle">'+esc(t("dateTitle"))+'</h2><p class="desc">'+esc(t("dateDesc"))+'</p></div><span class="badge">2 / 3</span></div><div class="progress"><span style="width:66%"></span></div><div class="fields"><div class="field"><label for="resDate">'+esc(t("date"))+' <span>*</span></label><input id="resDate" type="date" min="'+today()+'" value="'+esc(state.reservation.date||"")+'"></div><div class="field"><label for="resTime">'+esc(t("time"))+' <span>*</span></label><input id="resTime" type="time" value="'+esc(state.reservation.time||"")+'"></div></div><p class="error" id="dateError" role="alert"></p><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="dateNext">'+esc(t("continue"))+"</button></div></section>");
-        document.getElementById("dateNext").addEventListener("click",function(){
-          const date=required("resDate","dateError"),time=required("resTime","dateError");
-          if(!date||!time)return;state.reservation.date=date;state.reservation.time=time;reservationThree();
-        });bindBack(reservationOne);
-      }
-      function reservationThree(){
-        addMessage("bot",t("contactMessage"));
-        setCard('<section class="card" aria-labelledby="contactTitle"><div class="card-head"><div><h2 id="contactTitle">'+esc(t("contactTitle"))+'</h2><p class="desc">'+esc(t("contactDesc"))+'</p></div><span class="badge">3 / 3</span></div><div class="progress"><span style="width:100%"></span></div><div class="fields"><div class="field"><label for="customerName">'+esc(t("name"))+' <span>*</span></label><input id="customerName" type="text" maxlength="120" autocomplete="off" value="'+esc(state.reservation.name||"")+'"></div><div class="field"><label for="customerPhone">'+esc(t("phone"))+' <span>*</span></label><input id="customerPhone" type="tel" maxlength="30" autocomplete="off" value="'+esc(state.reservation.phone||"")+'"></div><div class="field full"><label for="customerEmail">'+esc(t("email"))+'</label><input id="customerEmail" type="email" maxlength="254" autocomplete="off" value="'+esc(state.reservation.email||"")+'"></div><div class="field full"><label for="customerNotes">'+esc(t("notes"))+'</label><textarea id="customerNotes" maxlength="800">'+esc(state.reservation.notes||"")+'</textarea></div></div><p class="error" id="contactError" role="alert"></p><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="reviewRes">'+esc(t("review"))+"</button></div></section>");
-        document.getElementById("reviewRes").addEventListener("click",function(){
-          const name=required("customerName","contactError"),phone=required("customerPhone","contactError");
-          if(!name||!phone)return;
-          state.reservation.name=name;state.reservation.phone=phone;
-          state.reservation.email=document.getElementById("customerEmail").value.trim();
-          state.reservation.notes=document.getElementById("customerNotes").value.trim();
-          reservationReview();
-        });bindBack(reservationTwo);
       }
       function serviceName(value){return value==="buffet"?t("serviceBuffet"):value==="table"?t("serviceTable"):t("serviceGroup")}
       function summaryRow(label,value){return '<div class="row"><span>'+esc(label)+'</span><span>'+esc(value||t("noData"))+"</span></div>"}
-      function maskPhone(value){const clean=String(value||"").replace(/\s+/g,"");return clean.length>4?"••••••"+clean.slice(-4):clean}
-      function reservationReview(){
-        addMessage("bot",t("reviewMessage"));
-        setCard('<section class="card" aria-labelledby="reviewTitle"><div class="card-head"><div><h2 id="reviewTitle">'+esc(t("reviewTitle"))+'</h2><p class="desc">'+esc(t("reviewDesc"))+'</p></div><span class="badge">'+esc(t("simulated"))+'</span></div><div class="summary">'+summaryRow(t("service"),serviceName(state.reservation.service))+summaryRow(t("people"),state.reservation.people)+summaryRow(t("date"),state.reservation.date)+summaryRow(t("time"),state.reservation.time)+summaryRow(t("name"),state.reservation.name)+summaryRow(t("phone"),maskPhone(state.reservation.phone))+summaryRow(t("email"),state.reservation.email)+summaryRow(t("notes"),state.reservation.notes)+'</div><div class="success">'+esc(t("reviewDesc"))+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="confirmRes">'+esc(t("confirm"))+"</button></div></section>");
-        document.getElementById("confirmRes").addEventListener("click",reservationSuccess);bindBack(reservationThree);
-      }
-      function reservationSuccess(){
-        addMessage("user",t("confirm"));addMessage("bot",t("successMessage"));
-        setCard('<section class="card" aria-labelledby="successTitle"><div class="card-head"><div><h2 id="successTitle">'+esc(t("successTitle"))+'</h2><p class="desc">DEMO-EMI-0001</p></div><span class="badge">✓ '+esc(t("simulated"))+'</span></div><div class="success"><strong>'+esc(t("successText"))+'</strong></div><div class="actions"><button class="button primary" type="button" id="tryAnother">'+esc(t("tryAnother"))+"</button></div></section>");
-        document.getElementById("tryAnother").addEventListener("click",backHome);
-      }
       function renderSecurity(){
         addMessage("bot",t("securityText"));
         setCard('<section class="card" aria-labelledby="securityTitle"><div class="card-head"><div><h2 id="securityTitle">'+esc(t("securityTitle"))+'</h2><p class="desc">S/ 0 OpenAI</p></div><span class="badge">VERIFICADO</span></div><div class="summary">'+summaryRow(t("api"),t("disabled"))+summaryRow(t("database"),t("disabled"))+summaryRow(t("automaticNetwork"),t("blocked"))+summaryRow("Memoria",t("localMemory"))+'</div><div class="success">'+esc(t("securityText"))+'</div><div class="actions"><button class="button primary" type="button" data-back>'+esc(t("back"))+"</button></div></section>");
@@ -541,14 +556,23 @@
       }
       function conversationLang(text){
         if(/\b(rimaykullayki|mikhuna|hayk'a|maypi|runasimi|munani|uraykachiy)\b/.test(text))return"qu";
-        if(/\b(hello|hi|please|menu|price|prices|reserve|reservation|opening hours|where are you|download|website)\b/.test(text))return"en";
+        if(/\b(hello|hi|please|brochure|price|prices|reserve|reservation|opening hours|where are you|download|website)\b/.test(text))return"en";
         return null;
       }
       function handleTyped(raw){
         const text=norm(raw),menuLang=targetMenuLang(text),detected=conversationLang(text);
+        const asksDossier=/\b(dossier|dosier|dossiert|brochure|folleto|guia comercial|presentacion comercial)\b/.test(text);
+        const asksBuffet=/\b(buffet|buffet criollo|buffet criolla|carta del buffet|menu del buffet)\b/.test(text);
         const asksMenu=/\b(carta|menu|pdf|descargar|download|uraykachiy|mikhuna qillqa)\b/.test(text);
+        const asksMenuLanguages=asksMenu&&/\b(idioma|idiomas|language|languages|simi)\b/.test(text);
+        if(!asksMenu&&!asksDossier&&!asksBuffet&&/\b(espanol|spanish|castellano)\b/.test(text)&&(/^(espanol|spanish|castellano)$/.test(text)||/\b(quiero|habla|responde|cambia|pon|continua|idioma|language)\b/.test(text))){changeLanguage("es",true);return}
+        if(!asksMenu&&!asksDossier&&!asksBuffet&&/\b(ingles|english)\b/.test(text)&&(/^(ingles|english)$/.test(text)||/\b(quiero|habla|responde|cambia|pon|continua|idioma|language|speak)\b/.test(text))){changeLanguage("en",true);return}
+        if(!asksMenu&&!asksDossier&&!asksBuffet&&/\b(quechua|runasimi|runa simi)\b/.test(text)&&(/^(quechua|runasimi|runa simi)$/.test(text)||/\b(quiero|habla|responde|cambia|pon|continua|idioma|simi)\b/.test(text))){changeLanguage("qu",true);return}
         if(detected&&detected!==state.uiLang){state.uiLang=detected;applyCopy()}
-        if(asksMenu){if(menuLang)renderMenuGuide(menuLang);else renderMenuLanguages();return}
+        if(/\b(inicio|home|start|qallariy)\b/.test(text)&&/\b(volver|regresar|ir|go|back|kutiy|qallariy)\b/.test(text)){renderHome(false);return}
+        if(asksDossier){renderDossier();return}
+        if(asksBuffet){renderMenuOverview(true);return}
+        if(asksMenu){if(menuLang)renderMenuGuide(menuLang);else if(asksMenuLanguages)renderMenuLanguages();else renderMenuOverview(false);return}
         if(/\b(reserv|mesa|table|misa waqaychay|wakichiy)\b/.test(text)){reservationOne();return}
         if(/\b(precio|precios|price|prices|costo|cost|chani|chaninkuna)\b/.test(text)){renderInfo("prices");return}
         if(/\b(horario|horarios|hora de atencion|opening hours|open|close|pacha|kichasqa)\b/.test(text)){renderInfo("hours");return}
@@ -556,9 +580,6 @@
         if(/\b(pagina|sitio web|website|web oficial|web p'anqa)\b/.test(text)){renderInfo("website");return}
         if(/\b(whatsapp|persona|asesor|equipo|human|staff|team|llamk'aq)\b/.test(text)){renderInfo("human");return}
         if(/\b(openai|inteligencia artificial|artificial intelligence|saldo|gasta|consume|ia|api)\b/.test(text)){renderSecurity();return}
-        if(/^(espanol|spanish|castellano)$/.test(text)){changeLanguage("es",true);return}
-        if(/^(ingles|english)$/.test(text)){changeLanguage("en",true);return}
-        if(/^(quechua|runasimi|runa simi)$/.test(text)){changeLanguage("qu",true);return}
         if(/\b(hola|buenos dias|buenas|hello|hi|rimaykullayki)\b/.test(text)){addMessage("bot",t("greeting"));renderHome(true);return}
         addMessage("bot",t("unknown"));renderHome(true);
       }
@@ -569,6 +590,7 @@
       }
       el.send.addEventListener("click",function(){submitText()});
       el.input.addEventListener("keydown",function(event){if(event.key==="Enter"&&!event.isComposing){event.preventDefault();submitText()}});
+      el.home.addEventListener("click",function(){state.reservation={};renderHome(false)});
       el.reset.addEventListener("click",function(){state.uiLang="es";state.menuLang="qu";state.reservation={};applyCopy();renderHome(false)});
 
       applyCopy();renderHome(false);
