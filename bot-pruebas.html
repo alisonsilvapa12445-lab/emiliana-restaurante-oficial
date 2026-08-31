@@ -1,1447 +1,578 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex,nofollow,noarchive">
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
-    >
-    <title>Laboratorio del Bot | Emiliana</title>
-    <style>
-      :root {
-        color-scheme: light;
-        --wine: #78283d;
-        --wine-dark: #571b2c;
-        --gold: #c99334;
-        --cream: #fff9f0;
-        --paper: #ffffff;
-        --ink: #2d211b;
-        --muted: #6e625a;
-        --line: #eadac8;
-        --green: #17724b;
-        --green-soft: #e8f7ef;
-        --red: #ad2b26;
-        --red-soft: #fff0ee;
-        --blue: #285eaa;
-        --shadow: 0 24px 70px rgba(72, 39, 25, 0.13);
-        --radius: 24px;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        min-width: 320px;
-        background: #f5eadc;
-      }
-
-      body {
-        min-height: 100vh;
-        margin: 0;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at 8% 4%, rgba(201, 147, 52, 0.19), transparent 27rem),
-          radial-gradient(circle at 94% 92%, rgba(120, 40, 61, 0.12), transparent 30rem),
-          linear-gradient(145deg, #fffaf3 0%, #f2e3d1 100%);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.5;
-      }
-
-      button,
-      input,
-      select,
-      textarea {
-        font: inherit;
-      }
-
-      button {
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .shell {
-        width: min(1240px, calc(100% - 32px));
-        margin: 0 auto;
-        padding: 28px 0 42px;
-      }
-
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 22px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-      }
-
-      .brand-mark {
-        display: grid;
-        width: 48px;
-        height: 48px;
-        place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.66);
-        border-radius: 16px;
-        color: #fff;
-        background: linear-gradient(145deg, var(--wine), var(--wine-dark));
-        box-shadow: 0 10px 24px rgba(120, 40, 61, 0.24);
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 29px;
-        font-weight: 700;
-      }
-
-      .brand-copy small {
-        display: block;
-        color: var(--wine);
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .brand-copy strong {
-        display: block;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(21px, 3vw, 29px);
-        line-height: 1.05;
-      }
-
-      .top-status {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 8px;
-      }
-
-      .pill {
-        display: inline-flex;
-        min-height: 34px;
-        align-items: center;
-        gap: 7px;
-        padding: 7px 12px;
-        border: 1px solid rgba(23, 114, 75, 0.19);
-        border-radius: 999px;
-        color: var(--green);
-        background: rgba(232, 247, 239, 0.86);
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.03em;
-      }
-
-      .pill::before {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: currentColor;
-        content: "";
-        box-shadow: 0 0 0 4px rgba(23, 114, 75, 0.1);
-      }
-
-      .workspace {
-        display: grid;
-        grid-template-columns: minmax(250px, 340px) minmax(0, 1fr);
-        gap: 22px;
-        align-items: stretch;
-      }
-
-      .safety-panel,
-      .chat {
-        border: 1px solid rgba(255, 255, 255, 0.72);
-        border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.82);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(18px);
-      }
-
-      .safety-panel {
-        display: flex;
-        min-height: 690px;
-        flex-direction: column;
-        padding: 26px;
-      }
-
-      .eyebrow {
-        margin: 0 0 8px;
-        color: var(--wine);
-        font-size: 11px;
-        font-weight: 900;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-      }
-
-      .safety-panel h1 {
-        margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(28px, 3.4vw, 43px);
-        font-weight: 700;
-        letter-spacing: -0.025em;
-        line-height: 1.04;
-      }
-
-      .lead {
-        margin: 14px 0 22px;
-        color: var(--muted);
-        font-size: 15px;
-      }
-
-      .zero-card {
-        padding: 18px;
-        border: 1px solid rgba(23, 114, 75, 0.16);
-        border-radius: 19px;
-        background: linear-gradient(145deg, #f0fbf5, #e7f6ee);
-      }
-
-      .zero-card strong {
-        display: block;
-        color: var(--green);
-        font-size: 20px;
-      }
-
-      .zero-card span {
-        display: block;
-        margin-top: 3px;
-        color: #466558;
-        font-size: 13px;
-      }
-
-      .checklist {
-        display: grid;
-        gap: 12px;
-        margin: 22px 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .checklist li {
-        display: grid;
-        grid-template-columns: 25px 1fr;
-        gap: 10px;
-        align-items: start;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .check {
-        display: grid;
-        width: 23px;
-        height: 23px;
-        place-items: center;
-        border-radius: 8px;
-        color: var(--green);
-        background: var(--green-soft);
-        font-size: 13px;
-        font-weight: 900;
-      }
-
-      .testing-note {
-        margin-top: auto;
-        padding-top: 18px;
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .reset-button {
-        width: 100%;
-        min-height: 45px;
-        margin-top: 13px;
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        color: var(--wine);
-        background: #fff;
-        cursor: pointer;
-        font-weight: 800;
-        transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
-      }
-
-      .reset-button:hover {
-        border-color: rgba(120, 40, 61, 0.42);
-        box-shadow: 0 8px 18px rgba(76, 38, 24, 0.08);
-        transform: translateY(-1px);
-      }
-
-      .chat {
-        display: grid;
-        min-height: 690px;
-        grid-template-rows: auto minmax(230px, 1fr) auto auto;
-        overflow: hidden;
-        background: rgba(255, 252, 247, 0.94);
-      }
-
-      .chat-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 14px;
-        padding: 18px 21px;
-        border-bottom: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.92);
-      }
-
-      .assistant-id {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-      }
-
-      .assistant-avatar {
-        display: grid;
-        width: 42px;
-        height: 42px;
-        place-items: center;
-        border-radius: 14px;
-        color: #fff;
-        background: var(--wine);
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 23px;
-        font-weight: 700;
-      }
-
-      .assistant-id strong,
-      .assistant-id span {
-        display: block;
-      }
-
-      .assistant-id strong {
-        font-size: 14px;
-      }
-
-      .assistant-id span {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .network-lock {
-        color: var(--green);
-        font-size: 12px;
-        font-weight: 800;
-        text-align: right;
-      }
-
-      .messages {
-        display: flex;
-        min-height: 0;
-        flex-direction: column;
-        gap: 14px;
-        overflow-y: auto;
-        padding: 24px clamp(16px, 4vw, 34px);
-        scroll-behavior: smooth;
-      }
-
-      .message {
-        display: flex;
-        max-width: min(88%, 620px);
-        gap: 9px;
-        align-items: flex-end;
-        animation: rise 180ms ease-out;
-      }
-
-      .message--user {
-        align-self: flex-end;
-        flex-direction: row-reverse;
-      }
-
-      .message-avatar {
-        display: grid;
-        width: 28px;
-        height: 28px;
-        flex: 0 0 auto;
-        place-items: center;
-        border-radius: 10px;
-        color: var(--wine);
-        background: #f3e4d5;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 15px;
-        font-weight: 700;
-      }
-
-      .message--user .message-avatar {
-        color: #fff;
-        background: var(--wine);
-        font-family: inherit;
-        font-size: 11px;
-      }
-
-      .bubble {
-        padding: 12px 14px;
-        border: 1px solid var(--line);
-        border-radius: 18px 18px 18px 5px;
-        background: #fff;
-        box-shadow: 0 7px 18px rgba(65, 40, 27, 0.06);
-        font-size: 14px;
-      }
-
-      .message--user .bubble {
-        border-color: var(--wine);
-        border-radius: 18px 18px 5px 18px;
-        color: #fff;
-        background: var(--wine);
-      }
-
-      .bubble strong {
-        color: var(--wine);
-      }
-
-      .message--user .bubble strong {
-        color: #fff;
-      }
-
-      .interactive {
-        padding: 0 clamp(16px, 4vw, 34px) 18px;
-      }
-
-      .card {
-        padding: 20px;
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        background: #fff;
-        box-shadow: 0 12px 32px rgba(67, 39, 24, 0.08);
-        animation: rise 200ms ease-out;
-      }
-
-      .card-head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 16px;
-      }
-
-      .card h2 {
-        margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 21px;
-        line-height: 1.15;
-      }
-
-      .card-description {
-        margin: 5px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .step-badge {
-        flex: 0 0 auto;
-        padding: 5px 9px;
-        border-radius: 999px;
-        color: var(--wine);
-        background: #f7e9e6;
-        font-size: 11px;
-        font-weight: 900;
-      }
-
-      .progress {
-        height: 5px;
-        margin: -4px 0 18px;
-        overflow: hidden;
-        border-radius: 999px;
-        background: #eee2d6;
-      }
-
-      .progress span {
-        display: block;
-        height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, var(--wine), var(--gold));
-        transition: width 180ms ease;
-      }
-
-      .quick-grid,
-      .topic-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .choice {
-        min-height: 64px;
-        padding: 13px 14px;
-        border: 1px solid var(--line);
-        border-radius: 15px;
-        color: var(--ink);
-        background: #fffdf9;
-        cursor: pointer;
-        font-weight: 800;
-        text-align: left;
-        transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
-      }
-
-      .choice small {
-        display: block;
-        margin-top: 3px;
-        color: var(--muted);
-        font-size: 11px;
-        font-weight: 500;
-      }
-
-      .choice:hover {
-        border-color: rgba(120, 40, 61, 0.43);
-        background: #fff8f2;
-        transform: translateY(-1px);
-      }
-
-      .choice:focus-visible,
-      .button:focus-visible,
-      .reset-button:focus-visible,
-      input:focus-visible,
-      select:focus-visible,
-      textarea:focus-visible {
-        outline: 3px solid rgba(40, 94, 170, 0.35);
-        outline-offset: 2px;
-      }
-
-      .fields {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .field {
-        display: grid;
-        gap: 6px;
-      }
-
-      .field--full {
-        grid-column: 1 / -1;
-      }
-
-      .field label {
-        font-size: 12px;
-        font-weight: 850;
-      }
-
-      .field label span {
-        color: var(--red);
-      }
-
-      .field input,
-      .field select,
-      .field textarea {
-        width: 100%;
-        min-height: 45px;
-        border: 1px solid #dcc8b5;
-        border-radius: 13px;
-        color: var(--ink);
-        background: #fff;
-        padding: 10px 12px;
-      }
-
-      .field textarea {
-        min-height: 84px;
-        resize: vertical;
-      }
-
-      .field-help {
-        color: var(--muted);
-        font-size: 11px;
-      }
-
-      .error {
-        min-height: 18px;
-        margin: 10px 0 0;
-        color: var(--red);
-        font-size: 12px;
-        font-weight: 750;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 9px;
-        margin-top: 17px;
-      }
-
-      .button {
-        min-height: 44px;
-        padding: 10px 16px;
-        border: 1px solid transparent;
-        border-radius: 13px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 850;
-        transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
-      }
-
-      .button:hover {
-        transform: translateY(-1px);
-      }
-
-      .button--primary {
-        color: #fff;
-        background: var(--wine);
-        box-shadow: 0 8px 18px rgba(120, 40, 61, 0.2);
-      }
-
-      .button--primary:hover {
-        background: var(--wine-dark);
-      }
-
-      .button--secondary {
-        border-color: var(--line);
-        color: var(--wine);
-        background: #fff;
-      }
-
-      .button--danger {
-        color: #fff;
-        background: var(--red);
-      }
-
-      .summary {
-        display: grid;
-        gap: 0;
-        margin: 4px 0 0;
-        border: 1px solid var(--line);
-        border-radius: 15px;
-        overflow: hidden;
-      }
-
-      .summary-row {
-        display: grid;
-        grid-template-columns: minmax(115px, 0.7fr) 1.3fr;
-        gap: 12px;
-        padding: 10px 12px;
-        border-bottom: 1px solid var(--line);
-        font-size: 12px;
-      }
-
-      .summary-row:last-child {
-        border-bottom: 0;
-      }
-
-      .summary-row span:first-child {
-        color: var(--muted);
-        font-weight: 750;
-      }
-
-      .summary-row span:last-child {
-        overflow-wrap: anywhere;
-        font-weight: 800;
-      }
-
-      .demo-notice,
-      .success-box,
-      .danger-box {
-        margin-top: 14px;
-        padding: 13px 14px;
-        border-radius: 14px;
-        font-size: 12px;
-      }
-
-      .demo-notice {
-        border: 1px solid rgba(40, 94, 170, 0.15);
-        color: #365675;
-        background: #eef5ff;
-      }
-
-      .success-box {
-        border: 1px solid rgba(23, 114, 75, 0.18);
-        color: #315e4a;
-        background: var(--green-soft);
-      }
-
-      .success-box strong {
-        display: block;
-        margin-bottom: 3px;
-        color: var(--green);
-        font-size: 14px;
-      }
-
-      .danger-box {
-        border: 1px solid rgba(173, 43, 38, 0.16);
-        color: #70413e;
-        background: var(--red-soft);
-      }
-
-      .chat-foot {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 38px;
-        padding: 8px 16px;
-        border-top: 1px solid var(--line);
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.82);
-        font-size: 11px;
-        text-align: center;
-      }
-
-      @keyframes rise {
-        from {
-          opacity: 0;
-          transform: translateY(6px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          scroll-behavior: auto !important;
-          transition: none !important;
-          animation: none !important;
-        }
-      }
-
-      @media (max-width: 820px) {
-        .workspace {
-          grid-template-columns: 1fr;
-        }
-
-        .safety-panel {
-          min-height: auto;
-        }
-
-        .testing-note {
-          margin-top: 5px;
-        }
-
-        .chat {
-          min-height: 720px;
-        }
-      }
-
-      @media (max-width: 560px) {
-        .shell {
-          width: min(100% - 18px, 1240px);
-          padding-top: 15px;
-        }
-
-        .topbar {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        .top-status {
-          justify-content: flex-start;
-        }
-
-        .safety-panel {
-          padding: 21px;
-        }
-
-        .chat-head {
-          padding: 14px;
-        }
-
-        .network-lock {
-          max-width: 95px;
-        }
-
-        .message {
-          max-width: 95%;
-        }
-
-        .quick-grid,
-        .topic-grid,
-        .fields {
-          grid-template-columns: 1fr;
-        }
-
-        .field--full {
-          grid-column: auto;
-        }
-
-        .card {
-          padding: 16px;
-        }
-
-        .actions {
-          align-items: stretch;
-          flex-direction: column-reverse;
-        }
-
-        .button {
-          width: 100%;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <main class="shell">
-      <header class="topbar">
-        <div class="brand" aria-label="Emiliana Buffet">
-          <div class="brand-mark" aria-hidden="true">E</div>
-          <div class="brand-copy">
-            <small>Buffet cultural · Cusco</small>
-            <strong>Emiliana</strong>
-          </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Laboratorio del Bot | Emiliana</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#0b0709; --panel:rgba(27,16,20,.9); --panel2:#201217;
+      --wine:#9b3350; --wine2:#c95070; --gold:#dfb45f; --gold2:#f4dda1;
+      --ink:#fff7ee; --muted:#b7a6a1; --line:rgba(244,221,161,.16);
+      --green:#67d79d; --blue:#78b9ff; --red:#ff9087;
+      --shadow:0 28px 90px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html{min-width:320px;background:var(--bg)}
+    body{
+      min-height:100vh;margin:0;color:var(--ink);line-height:1.5;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 10% -5%,rgba(155,51,80,.35),transparent 34rem),
+        radial-gradient(circle at 95% 100%,rgba(223,180,95,.14),transparent 32rem),
+        linear-gradient(145deg,#120b0e,#070507);
+    }
+    body::before{
+      position:fixed;inset:0;z-index:-1;opacity:.25;content:"";
+      background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:38px 38px;mask-image:linear-gradient(#000,transparent 88%);
+    }
+    button,input,select,textarea{font:inherit}
+    button,a{-webkit-tap-highlight-color:transparent}
+    button{color:inherit}
+    .shell{width:min(1380px,calc(100% - 34px));margin:auto;padding:22px 0 34px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:17px}
+    .brand{display:flex;align-items:center;gap:13px}
+    .brand-mark{
+      display:grid;width:49px;height:49px;place-items:center;border:1px solid rgba(244,221,161,.4);
+      border-radius:17px;color:var(--gold2);background:linear-gradient(145deg,#76223c,#3c111f);
+      box-shadow:0 12px 34px rgba(155,51,80,.28);font:700 30px Georgia,serif;
+    }
+    .brand-copy small,.brand-copy strong{display:block}
+    .brand-copy small{color:var(--gold);font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .brand-copy strong{font:700 clamp(22px,3vw,30px)/1.05 Georgia,serif}
+    .status-row{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+    .status{
+      display:inline-flex;min-height:34px;align-items:center;gap:8px;padding:7px 12px;
+      border:1px solid rgba(103,215,157,.22);border-radius:999px;color:var(--green);
+      background:rgba(19,65,44,.32);font-size:11px;font-weight:900;letter-spacing:.04em;
+    }
+    .dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px rgba(103,215,157,.1),0 0 18px currentColor}
+    .workspace{display:grid;min-height:min(800px,calc(100vh - 115px));grid-template-columns:minmax(270px,340px) minmax(0,1fr);gap:17px}
+    .control,.chat{border:1px solid var(--line);border-radius:28px;background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(22px)}
+    .control{display:flex;flex-direction:column;padding:25px;overflow:hidden}
+    .eyebrow{margin:0 0 8px;color:var(--gold);font-size:10px;font-weight:950;letter-spacing:.18em;text-transform:uppercase}
+    .control h1{max-width:290px;margin:0;font:700 clamp(29px,3.6vw,46px)/1.02 Georgia,serif;letter-spacing:-.035em}
+    .lead{margin:14px 0 20px;color:var(--muted);font-size:13px}
+    .cost{
+      position:relative;padding:17px;overflow:hidden;border:1px solid rgba(103,215,157,.21);
+      border-radius:19px;background:linear-gradient(145deg,rgba(35,105,71,.34),rgba(20,48,36,.4));
+    }
+    .cost::after{position:absolute;top:-30px;right:-24px;width:100px;height:100px;border:1px solid rgba(103,215,157,.12);border-radius:50%;content:""}
+    .cost strong{display:block;color:var(--green);font-size:21px}
+    .cost span{display:block;margin-top:3px;color:#b9d8c8;font-size:11px}
+    .section-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:23px 0 10px;color:var(--muted);font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .language-list{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+    .lang-btn{
+      min-height:48px;padding:8px 5px;border:1px solid var(--line);border-radius:13px;
+      color:var(--muted);background:rgba(255,255,255,.025);cursor:pointer;font-size:11px;font-weight:850;transition:.15s ease;
+    }
+    .lang-btn span{display:block;color:var(--ink);font-size:13px}
+    .lang-btn:hover,.lang-btn[aria-pressed="true"]{border-color:rgba(223,180,95,.58);color:var(--gold2);background:rgba(223,180,95,.1);transform:translateY(-1px)}
+    .prompt-list{display:grid;gap:7px}
+    .prompt{
+      padding:10px 11px;border:1px solid var(--line);border-radius:12px;color:#d8c9c4;
+      background:rgba(255,255,255,.025);cursor:pointer;font-size:11px;text-align:left;transition:.15s ease;
+    }
+    .prompt:hover{border-color:rgba(201,80,112,.55);background:rgba(155,51,80,.12)}
+    .prompt::before{margin-right:7px;color:var(--gold);content:"↗"}
+    .control-foot{margin-top:auto;padding-top:20px}
+    .safe{padding-top:15px;border-top:1px solid var(--line);color:#9f908d;font-size:10px}
+    .reset{width:100%;min-height:42px;margin-top:11px;border:1px solid var(--line);border-radius:13px;color:var(--gold2);background:transparent;cursor:pointer;font-size:11px;font-weight:900}
+    .chat{display:grid;min-width:0;grid-template-rows:auto minmax(230px,1fr) auto auto auto;overflow:hidden;background:rgba(18,11,14,.94)}
+    .chat-head{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px 20px;border-bottom:1px solid var(--line);background:rgba(32,19,24,.88)}
+    .assistant{display:flex;min-width:0;align-items:center;gap:11px}
+    .avatar{
+      position:relative;display:grid;width:42px;height:42px;flex:0 0 auto;place-items:center;
+      border:1px solid rgba(244,221,161,.28);border-radius:14px;color:var(--gold2);
+      background:linear-gradient(145deg,#8c2946,#471425);font:700 23px Georgia,serif;
+    }
+    .avatar::after{position:absolute;right:-2px;bottom:-2px;width:10px;height:10px;border:2px solid #24151a;border-radius:50%;background:var(--green);content:""}
+    .assistant-copy{min-width:0}.assistant-copy strong,.assistant-copy span{display:block}
+    .assistant-copy strong{font-size:13px}.assistant-copy span{overflow:hidden;color:var(--muted);font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+    .metrics{display:flex;gap:7px}.metric{padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.025);font-size:9px;font-weight:900;text-transform:uppercase}.metric strong{color:var(--green)}
+    .messages{display:flex;min-height:0;flex-direction:column;gap:13px;overflow-y:auto;padding:23px clamp(15px,4vw,34px) 16px;scroll-behavior:smooth;scrollbar-color:rgba(223,180,95,.32) transparent}
+    .message{display:flex;max-width:min(88%,660px);gap:8px;align-items:flex-end;animation:rise .19s ease-out}
+    .message--user{align-self:flex-end;flex-direction:row-reverse}
+    .msg-avatar{display:grid;width:27px;height:27px;flex:0 0 auto;place-items:center;border:1px solid var(--line);border-radius:9px;color:var(--gold);background:#2b1920;font:700 14px Georgia,serif}
+    .message--user .msg-avatar{color:#fff;background:var(--wine);font:800 9px Inter,sans-serif}
+    .bubble{padding:11px 14px;border:1px solid var(--line);border-radius:17px 17px 17px 5px;color:#eee3dd;background:#24161a;box-shadow:0 10px 26px rgba(0,0,0,.16);font-size:13px;white-space:pre-line}
+    .message--user .bubble{border-color:rgba(201,80,112,.54);border-radius:17px 17px 5px 17px;color:#fff;background:linear-gradient(145deg,#9b3350,#6f2239)}
+    .interactive{padding:0 clamp(15px,4vw,34px) 15px}
+    .card{
+      padding:18px;border:1px solid rgba(244,221,161,.18);border-radius:21px;
+      background:linear-gradient(145deg,rgba(255,255,255,.035),transparent 65%),#1e1216;
+      box-shadow:0 18px 48px rgba(0,0,0,.25);animation:rise .2s ease-out;
+    }
+    .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .card h2{margin:0;font:700 21px/1.15 Georgia,serif}.desc{margin:5px 0 0;color:var(--muted);font-size:11px}
+    .badge{flex:0 0 auto;padding:5px 8px;border:1px solid rgba(223,180,95,.22);border-radius:999px;color:var(--gold2);background:rgba(223,180,95,.08);font-size:9px;font-weight:950;letter-spacing:.06em;text-transform:uppercase}
+    .action-grid,.menu-languages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .menu-languages{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .choice{
+      min-height:72px;padding:12px;border:1px solid var(--line);border-radius:15px;color:var(--ink);
+      background:rgba(255,255,255,.025);cursor:pointer;font-size:12px;font-weight:850;text-align:left;transition:.15s ease;
+    }
+    .choice:hover{border-color:rgba(201,80,112,.58);background:rgba(155,51,80,.11);transform:translateY(-1px)}
+    .choice-icon{display:block;margin-bottom:7px;color:var(--gold);font-size:17px}.choice small{display:block;margin-top:3px;color:var(--muted);font-size:9px;font-weight:500}
+    .menu-lang{min-height:62px;text-align:center}.menu-lang strong,.menu-lang span{display:block}.menu-lang span{color:var(--muted);font-size:9px;font-weight:600}
+    .steps{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+    .step{display:grid;grid-template-columns:29px 1fr;gap:10px;align-items:start;padding:10px 11px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.02);font-size:11px}
+    .step-number{display:grid;width:27px;height:27px;place-items:center;border-radius:9px;color:#1b1114;background:var(--gold);font-size:10px;font-weight:950}
+    .notice,.success,.warning{margin-top:12px;padding:11px 12px;border-radius:13px;font-size:10px}
+    .notice{border:1px solid rgba(120,185,255,.2);color:#b9d9ff;background:rgba(32,86,145,.15)}
+    .success{border:1px solid rgba(103,215,157,.2);color:#bfe8d2;background:rgba(35,105,71,.18)}
+    .warning{border:1px solid rgba(255,144,135,.2);color:#ffd0cb;background:rgba(137,46,40,.15)}
+    .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:grid;gap:5px}.full{grid-column:1/-1}
+    .field label{color:#e7d9d4;font-size:10px;font-weight:850}.field label span{color:var(--red)}
+    .field input,.field select,.field textarea{width:100%;min-height:43px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;color:var(--ink);background:#160e11}
+    .field textarea{min-height:70px;resize:vertical}.field option{background:#160e11}
+    .error{min-height:16px;margin:8px 0 0;color:var(--red);font-size:10px;font-weight:800}
+    .progress{height:4px;margin:-3px 0 15px;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.06)}.progress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--wine2),var(--gold))}
+    .summary{display:grid;overflow:hidden;border:1px solid var(--line);border-radius:14px}
+    .row{display:grid;grid-template-columns:minmax(105px,.7fr) 1.3fr;gap:10px;padding:9px 11px;border-bottom:1px solid var(--line);font-size:10px}.row:last-child{border:0}.row span:first-child{color:var(--muted)}.row span:last-child{overflow-wrap:anywhere;font-weight:850}
+    .actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-top:14px}
+    .button,.link-button{display:inline-flex;min-height:41px;align-items:center;justify-content:center;padding:9px 14px;border:1px solid transparent;border-radius:12px;cursor:pointer;font-size:10px;font-weight:900;text-decoration:none;transition:.15s ease}
+    .button:hover,.link-button:hover{transform:translateY(-1px)}
+    .primary{color:#fff;background:linear-gradient(145deg,var(--wine2),#8d2946);box-shadow:0 8px 22px rgba(155,51,80,.26)}
+    .secondary{border-color:var(--line);color:var(--gold2);background:rgba(255,255,255,.025)}
+    .composer{display:grid;grid-template-columns:1fr auto;gap:9px;padding:13px clamp(15px,4vw,34px);border-top:1px solid var(--line);background:rgba(31,18,23,.94)}
+    .composer input{width:100%;min-width:0;min-height:45px;padding:10px 14px;border:1px solid var(--line);border-radius:14px;color:var(--ink);background:#120b0e}
+    .send{min-width:90px;min-height:45px;padding:10px 15px;border:0;border-radius:14px;color:#fff;background:linear-gradient(145deg,var(--wine2),#8c2946);cursor:pointer;font-size:11px;font-weight:950}
+    .chat-foot{display:flex;align-items:center;justify-content:center;min-height:31px;padding:6px 14px;color:#8f807d;background:#140c0f;font-size:9px;text-align:center}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(120,185,255,.48);outline-offset:2px}
+    @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+    @media(max-width:940px){.workspace{grid-template-columns:1fr}.control{min-height:auto}.control-foot{margin-top:15px}.prompt-list{grid-template-columns:repeat(3,1fr)}.chat{min-height:760px}}
+    @media(max-width:690px){.action-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.menu-languages{grid-template-columns:repeat(2,minmax(0,1fr))}.prompt-list{grid-template-columns:1fr}.metrics .metric:first-child{display:none}}
+    @media(max-width:520px){.shell{width:min(100% - 16px,1380px);padding-top:12px}.topbar{align-items:flex-start;flex-direction:column}.status-row{justify-content:flex-start}.control{padding:20px}.chat-head{padding:13px}.metrics{display:none}.message{max-width:96%}.card{padding:15px}.action-grid,.fields{grid-template-columns:1fr}.full{grid-column:auto}.composer{padding-inline:12px}.send{min-width:58px;padding-inline:10px}.actions{align-items:stretch;flex-direction:column-reverse}.button,.link-button{width:100%}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Emiliana Restaurante Buffet Cultural">
+        <div class="brand-mark" aria-hidden="true">E</div>
+        <div class="brand-copy"><small>Buffet cultural · Cusco</small><strong>Emiliana</strong></div>
+      </div>
+      <div class="status-row" aria-label="Estado de la prueba">
+        <span class="status"><span class="dot"></span>Modo demostración</span>
+        <span class="status"><span class="dot"></span>Consumo de IA: S/ 0</span>
+      </div>
+    </header>
+
+    <section class="workspace" aria-label="Laboratorio interactivo del bot">
+      <aside class="control">
+        <p class="eyebrow">Centro de pruebas · versión multilingüe</p>
+        <h1 id="labTitle">Prueba una atención más humana.</h1>
+        <p class="lead" id="labLead">Escribe preguntas o usa los cuadros. Las respuestas están programadas y funcionan sin inteligencia artificial.</p>
+        <div class="cost"><strong>S/ 0 en OpenAI</strong><span id="costText">Sin API, sin base de datos y sin envío de información.</span></div>
+
+        <div class="section-label"><span id="languageLabel">Idioma del bot</span><span id="activeLanguage">ES</span></div>
+        <div class="language-list" id="languageList" aria-label="Seleccionar idioma"></div>
+
+        <div class="section-label"><span id="tryLabel">Prueba escribiendo</span><span>↵</span></div>
+        <div class="prompt-list" id="promptList"></div>
+
+        <div class="control-foot">
+          <div class="safe" id="safeNote">Usa datos ficticios. Los enlaces se abren solo cuando tú los pulsas; ninguna API funciona en segundo plano.</div>
+          <button class="reset" id="resetDemo" type="button">Reiniciar toda la demostración</button>
         </div>
-        <div class="top-status" aria-label="Estado de la prueba">
-          <span class="pill">Modo demostración</span>
-          <span class="pill">Consumo de IA: S/ 0</span>
+      </aside>
+
+      <section class="chat" aria-label="Simulador del asistente">
+        <header class="chat-head">
+          <div class="assistant">
+            <div class="avatar" aria-hidden="true">E</div>
+            <div class="assistant-copy"><strong>Bot Oficial Emiliana</strong><span>Respuestas preprogramadas · Español, English y Runasimi</span></div>
+          </div>
+          <div class="metrics"><span class="metric">Red automática: <strong>OFF</strong></span><span class="metric">IA: <strong>S/ 0</strong></span></div>
+        </header>
+        <div class="messages" id="messages" aria-live="polite" aria-label="Conversación de prueba"></div>
+        <div class="interactive" id="interactiveCard"></div>
+        <div class="composer" role="group" aria-label="Escribir mensaje de prueba">
+          <input id="messageInput" type="text" maxlength="280" autocomplete="off" placeholder="Escribe: Quiero descargar la carta en quechua">
+          <button class="send" id="sendMessage" type="button">Enviar</button>
         </div>
-      </header>
-
-      <section class="workspace" aria-label="Laboratorio del bot">
-        <aside class="safety-panel">
-          <p class="eyebrow">Laboratorio protegido</p>
-          <h1>Prueba el bot sin gastar IA.</h1>
-          <p class="lead">
-            Recorre los cuadros, completa datos ficticios y prueba confirmaciones.
-            Esta página funciona completamente dentro de tu navegador.
-          </p>
-
-          <div class="zero-card">
-            <strong>S/ 0 en OpenAI</strong>
-            <span>No existe ninguna conexión con la API de inteligencia artificial.</span>
-          </div>
-
-          <ul class="checklist">
-            <li>
-              <span class="check" aria-hidden="true">✓</span>
-              <span><strong>Sin reservas reales.</strong> Confirmar genera únicamente un código DEMO.</span>
-            </li>
-            <li>
-              <span class="check" aria-hidden="true">✓</span>
-              <span><strong>Sin base de datos.</strong> Los campos viven solo en esta pestaña.</span>
-            </li>
-            <li>
-              <span class="check" aria-hidden="true">✓</span>
-              <span><strong>Sin conexiones externas.</strong> La ruta bloquea solicitudes salientes.</span>
-            </li>
-            <li>
-              <span class="check" aria-hidden="true">✓</span>
-              <span><strong>Sin información inventada.</strong> Precios y horarios se muestran como ejemplos pendientes de configuración.</span>
-            </li>
-          </ul>
-
-          <div class="testing-note">
-            Usa nombres y teléfonos ficticios. Al recargar o reiniciar, la simulación se borra.
-            <button class="reset-button" id="resetDemo" type="button">Reiniciar toda la prueba</button>
-          </div>
-        </aside>
-
-        <section class="chat" aria-label="Simulador del asistente">
-          <header class="chat-head">
-            <div class="assistant-id">
-              <div class="assistant-avatar" aria-hidden="true">E</div>
-              <div>
-                <strong>Bot Oficial Emiliana</strong>
-                <span>Entorno seguro de pruebas</span>
-              </div>
-            </div>
-            <div class="network-lock">Conexiones bloqueadas</div>
-          </header>
-
-          <div class="messages" id="messages" aria-live="polite" aria-label="Conversación de prueba"></div>
-          <div class="interactive" id="interactiveCard"></div>
-          <footer class="chat-foot">
-            DEMOSTRACIÓN · No guarda datos · No crea reservas · No llama a OpenAI
-          </footer>
-        </section>
+        <footer class="chat-foot" id="chatFoot">DEMOSTRACIÓN · No guarda datos · No crea reservas · No llama a OpenAI</footer>
       </section>
-    </main>
+    </section>
+  </main>
 
-    <script>
-      (function () {
-        "use strict";
+  <script>
+    (function () {
+      "use strict";
 
-        const messages = document.getElementById("messages");
-        const interactive = document.getElementById("interactiveCard");
-        const resetButton = document.getElementById("resetDemo");
-        const state = {
-          reservation: {},
-          management: {},
-          group: {},
-          handoff: {}
-        };
+      const LINKS = Object.freeze({
+        menu: "https://emiliana-carta-2026-2027.vercel.app/",
+        website: "https://www.emilianarestaurantebuffetcusco.com.pe/",
+        maps: "https://www.google.com/maps/search/?api=1&query=Emiliana+Restaurant+Av.+Tullumayo+235+Cusco",
+        whatsapp: "https://wa.me/51951520753?text=Hola%20Emiliana%2C%20quisiera%20informaci%C3%B3n%20sobre%20una%20reserva."
+      });
 
-        const infoTopics = {
-          buffet: {
-            title: "Información del buffet",
-            text: "Aquí aparecerá la descripción oficial del buffet desde la configuración aprobada."
-          },
-          prices: {
-            title: "Precios",
-            text: "Aquí aparecerán únicamente los precios oficiales vigentes. Esta demostración no consulta ni inventa montos."
-          },
-          hours: {
-            title: "Horarios",
-            text: "Aquí aparecerán los horarios oficiales configurados. En el laboratorio no se muestran horarios sin verificar."
-          },
-          location: {
-            title: "Ubicación",
-            text: "Aquí aparecerán la dirección oficial y el botón para llegar cuando estén conectados a la configuración pública."
-          },
-          payments: {
-            title: "Métodos de pago",
-            text: "Aquí aparecerán los métodos de pago confirmados por el restaurante."
-          },
-          dietary: {
-            title: "Opciones alimentarias",
-            text: "El bot registrará alergias o restricciones, pero el equipo deberá confirmar las alternativas y el manejo de alérgenos."
-          }
-        };
+      const UI_LANGUAGES = [
+        {code:"es",short:"ES",name:"Español"},
+        {code:"en",short:"EN",name:"English"},
+        {code:"qu",short:"QU",name:"Runasimi"}
+      ];
 
-        function escapeText(value) {
-          return String(value == null ? "" : value)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+      const MENU_LANGUAGES = [
+        {code:"es",name:"Español",native:"Español"},
+        {code:"en",name:"Inglés",native:"English"},
+        {code:"qu",name:"Quechua",native:"Runasimi"},
+        {code:"pt",name:"Portugués",native:"Português"},
+        {code:"fr",name:"Francés",native:"Français"},
+        {code:"de",name:"Alemán",native:"Deutsch"},
+        {code:"it",name:"Italiano",native:"Italiano"},
+        {code:"zh",name:"Chino",native:"中文"}
+      ];
+
+      const COPY = {
+        es: {
+          labTitle:"Prueba una atención más humana.",
+          labLead:"Escribe preguntas o usa los cuadros. Las respuestas están programadas y funcionan sin inteligencia artificial.",
+          costText:"Sin API, sin base de datos y sin envío de información.",
+          languageLabel:"Idioma del bot",tryLabel:"Prueba escribiendo",
+          safeNote:"Usa datos ficticios. Los enlaces se abren solo cuando tú los pulsas; ninguna API funciona en segundo plano.",
+          reset:"Reiniciar toda la demostración",placeholder:"Escribe: Quiero descargar la carta en quechua",send:"Enviar",
+          foot:"DEMOSTRACIÓN · No guarda datos · No crea reservas · No llama a OpenAI",
+          welcome:"¡Hola! Soy el asistente de Emiliana. Puedo ayudarte con la carta, idiomas, precios, horarios, ubicación y una reserva de prueba. ¿Qué deseas hacer?",
+          choose:"¿Qué deseas consultar?",chooseDesc:"También puedes escribir tu pregunta con tus propias palabras.",demo:"S/ 0 IA",
+          menu:"Ver o descargar la carta",menuSub:"Elige el idioma del PDF",
+          reserve:"Reservar una mesa",reserveSub:"Simulación guiada en 3 pasos",
+          prices:"Precios",pricesSub:"Consulta la carta oficial",
+          hours:"Horarios",hoursSub:"Información oficial publicada",
+          location:"Ubicación",locationSub:"Dirección y mapa",
+          website:"Página principal",websiteSub:"Visita el sitio oficial",
+          human:"Hablar con el equipo",humanSub:"Continuar por WhatsApp",
+          security:"¿Por qué no gasta IA?",securitySub:"Revisa la protección",other:"Elige otra función para continuar.",
+          menuAsk:"¿En qué idioma deseas ver y descargar la carta?",menuAskDesc:"La carta traduce el contenido y después permite guardarlo como PDF.",
+          menuSelected:"Preparé el acceso a la carta en {language}.",menuGuideTitle:"Carta en {language}",menuGuideDesc:"Pasos para visualizarla y guardarla como PDF.",
+          stepOpen:"Abre la carta oficial en una pestaña nueva.",stepLanguage:"En la barra superior, elige {language} en el selector de idioma.",stepDownload:"Pulsa “Descargar PDF” y guarda o imprime la carta traducida.",
+          menuTruth:"La carta actual se traduce dentro de su propia página. Todavía no existe un PDF fijo separado para cada idioma.",
+          quechuaWarning:"La traducción automática al quechua debe ser revisada por una persona que domine runasimi antes de usarse como documento comercial definitivo.",
+          openMenu:"Abrir carta multilingüe ↗",chooseOther:"Elegir otro idioma",back:"Volver",
+          pricesText:"Los precios oficiales vigentes aparecen en la carta gastronómica. El bot no copia montos para evitar mostrar precios desactualizados.",
+          hoursText:"Horario publicado: todos los días, de 12:00 a 22:00.",
+          locationText:"Emiliana Restaurant Cultural Buffet\nAv. Tullumayo 235 · Cusco 08002",
+          websiteText:"Esta es la página oficial de Emiliana Restaurante Buffet Cultural Cusco.",
+          humanText:"Puedes continuar con el equipo de Reservas por WhatsApp al +51 951 520 753.",
+          openWebsite:"Abrir página oficial ↗",openMap:"Abrir ubicación ↗",openWhatsapp:"Abrir WhatsApp ↗",infoSource:"Información oficial",
+          reserveStart:"Empecemos la simulación. Nada se guardará ni se enviará.",
+          visitTitle:"Datos de la visita",visitDesc:"Paso 1 de 3 · Usa información ficticia.",people:"Número de personas",service:"Tipo de servicio",select:"Selecciona",
+          serviceBuffet:"Buffet cultural",serviceTable:"Reserva de mesa",serviceGroup:"Grupo o evento",continue:"Continuar",required:"Completa los campos obligatorios para continuar.",
+          dateMessage:"Ahora selecciona una fecha y hora de prueba.",dateTitle:"Fecha y hora",dateDesc:"Paso 2 de 3 · No se consulta disponibilidad real.",date:"Fecha",time:"Hora",
+          contactMessage:"Completa datos ficticios de contacto.",contactTitle:"Contacto y detalles",contactDesc:"Paso 3 de 3 · Los datos viven solo en esta pestaña.",
+          name:"Nombre",phone:"Teléfono",email:"Correo opcional",notes:"Alergias, restricciones u observaciones",review:"Revisar reserva",
+          reviewMessage:"Revisa todo antes de confirmar la simulación.",reviewTitle:"Resumen de la reserva",reviewDesc:"Confirmar no crea una reserva real.",confirm:"Confirmar simulación",simulated:"SIMULADO",noData:"No indicado",
+          successMessage:"La prueba terminó correctamente. No se creó ninguna reserva real.",successTitle:"Reserva de prueba completada",successText:"Código DEMO-EMI-0001 · S/ 0 consumidos en OpenAI.",tryAnother:"Probar otra función",
+          securityText:"Este laboratorio usa reglas locales y respuestas preprogramadas. La política bloquea OpenAI, bases de datos, formularios y conexiones automáticas.",
+          securityTitle:"Protección de consumo",api:"API de OpenAI",database:"Base de datos",automaticNetwork:"Conexiones automáticas",disabled:"Desactivada",blocked:"Bloqueadas",localMemory:"Solo memoria temporal",
+          prompts:["Quiero descargar la carta en quechua","¿Cuáles son los horarios?","I want to make a reservation"],
+          unknown:"No encontré una respuesta preprogramada exacta. Puedo ayudarte con carta, idiomas, precios, horarios, ubicación, página web, WhatsApp o una reserva de prueba.",
+          languageChanged:"Perfecto. Continuaré en español.",greeting:"¡Hola! Elige una opción o escribe lo que necesitas."
+        },
+        en: {
+          labTitle:"Test a more human experience.",
+          labLead:"Type a question or use the cards. Every answer is preprogrammed and works without artificial intelligence.",
+          costText:"No API, no database and no information is sent.",
+          languageLabel:"Bot language",tryLabel:"Try typing",
+          safeNote:"Use fictional data. Links open only when you click them; no API runs in the background.",
+          reset:"Restart the entire demonstration",placeholder:"Type: I want to download the menu in Quechua",send:"Send",
+          foot:"DEMONSTRATION · No data saved · No reservations created · No OpenAI calls",
+          welcome:"Hello! I am Emiliana's assistant. I can help with the menu, languages, prices, opening hours, location and a test reservation. What would you like to do?",
+          choose:"What would you like to check?",chooseDesc:"You can also type your question in your own words.",demo:"S/ 0 AI",
+          menu:"View or download the menu",menuSub:"Choose the PDF language",
+          reserve:"Reserve a table",reserveSub:"Three-step guided simulation",
+          prices:"Prices",pricesSub:"Check the official menu",
+          hours:"Opening hours",hoursSub:"Official published information",
+          location:"Location",locationSub:"Address and map",
+          website:"Main website",websiteSub:"Visit the official site",
+          human:"Talk to our team",humanSub:"Continue on WhatsApp",
+          security:"Why does it use no AI?",securitySub:"Review the safeguards",other:"Choose another function to continue.",
+          menuAsk:"Which language would you like for viewing and downloading the menu?",menuAskDesc:"The menu translates its content and then lets you save it as a PDF.",
+          menuSelected:"I prepared access to the menu in {language}.",menuGuideTitle:"Menu in {language}",menuGuideDesc:"Steps to view it and save it as a PDF.",
+          stepOpen:"Open the official menu in a new tab.",stepLanguage:"In the top bar, choose {language} from the language selector.",stepDownload:"Press “Download PDF”, then save or print the translated menu.",
+          menuTruth:"The current menu is translated inside its own page. There is not yet a separate fixed PDF for every language.",
+          quechuaWarning:"The automatic Quechua translation should be reviewed by a fluent Runasimi speaker before it is used as a final commercial document.",
+          openMenu:"Open multilingual menu ↗",chooseOther:"Choose another language",back:"Back",
+          pricesText:"Current official prices are shown in the gastronomic menu. The bot does not copy prices, so it cannot show outdated amounts.",
+          hoursText:"Published hours: every day from 12:00 to 22:00.",
+          locationText:"Emiliana Restaurant Cultural Buffet\nAv. Tullumayo 235 · Cusco 08002",
+          websiteText:"This is the official website of Emiliana Restaurante Buffet Cultural Cusco.",
+          humanText:"You can continue with the Reservations team on WhatsApp at +51 951 520 753.",
+          openWebsite:"Open official website ↗",openMap:"Open location ↗",openWhatsapp:"Open WhatsApp ↗",infoSource:"Official information",
+          reserveStart:"Let's start the simulation. Nothing will be stored or sent.",
+          visitTitle:"Visit details",visitDesc:"Step 1 of 3 · Use fictional information.",people:"Number of guests",service:"Service type",select:"Select",
+          serviceBuffet:"Cultural buffet",serviceTable:"Table reservation",serviceGroup:"Group or event",continue:"Continue",required:"Complete the required fields to continue.",
+          dateMessage:"Now select a test date and time.",dateTitle:"Date and time",dateDesc:"Step 2 of 3 · Real availability is not checked.",date:"Date",time:"Time",
+          contactMessage:"Enter fictional contact details.",contactTitle:"Contact and details",contactDesc:"Step 3 of 3 · Data exists only in this tab.",
+          name:"Name",phone:"Phone",email:"Optional email",notes:"Allergies, dietary restrictions or notes",review:"Review reservation",
+          reviewMessage:"Review everything before confirming the simulation.",reviewTitle:"Reservation summary",reviewDesc:"Confirming does not create a real reservation.",confirm:"Confirm simulation",simulated:"SIMULATED",noData:"Not provided",
+          successMessage:"The test was completed successfully. No real reservation was created.",successTitle:"Test reservation completed",successText:"Code DEMO-EMI-0001 · S/ 0 spent on OpenAI.",tryAnother:"Try another function",
+          securityText:"This laboratory uses local rules and preprogrammed answers. Its policy blocks OpenAI, databases, forms and automatic connections.",
+          securityTitle:"Cost protection",api:"OpenAI API",database:"Database",automaticNetwork:"Automatic connections",disabled:"Disabled",blocked:"Blocked",localMemory:"Temporary memory only",
+          prompts:["I want to download the menu in Quechua","What are your opening hours?","Quiero reservar una mesa"],
+          unknown:"I could not find an exact preprogrammed answer. I can help with the menu, languages, prices, opening hours, location, website, WhatsApp or a test reservation.",
+          languageChanged:"Perfect. I will continue in English.",greeting:"Hello! Choose an option or type what you need."
+        },
+        qu: {
+          labTitle:"Aswan allin yanapakuyta malliy.",
+          labLead:"Tapuyta qillqay utaq tawa k'uchukunata akllay. Kutichiykuna ñawpaqmantan wakichisqa, mana IA nisqawanmi llamk'an.",
+          costText:"Mana API, mana datos waqaychana, mana willakuy apachiy.",
+          languageLabel:"Botpa simin",tryLabel:"Kayhinata qillqay",
+          safeNote:"Yant'a willakuykunallata churay. Enlacekuna ñit'isqaykipi qhawarinqa; qhipapiqa manan API llamk'anchu.",
+          reset:"Llapan malliyta musuqmanta qallariy",placeholder:"Qillqay: Runasimipi mikhuna qillqata uraykachiyta munani",send:"Apachiy",
+          foot:"MALLIY · Mana datos waqaychanchu · Mana reserva ruwanchu · Mana OpenAI waqyaychu",
+          welcome:"Rimaykullayki! Emiliana-pa yanapakuqnin kani. Mikhuna qillqa, simikuna, chaninkuna, pacha, maypi kasqayku, chaymanta reserva malliywan yanapasqayki. Imatan munanki?",
+          choose:"Imatan tapuyta munanki?",chooseDesc:"Kikin rimayniykiwanpas tapuyta qillqayta atinki.",demo:"S/ 0 IA",
+          menu:"Mikhuna qillqata qaway utaq uraykachiy",menuSub:"PDF-pa siminta akllay",
+          reserve:"Misata waqaychay",reserveSub:"Kimsa tatkipi malliy",
+          prices:"Chaninkuna",pricesSub:"Oficial mikhuna qillqata qaway",
+          hours:"Llamk'ana pacha",hoursSub:"Oficial willakuy",
+          location:"Maypi kasqayku",locationSub:"Dirección chaymanta mapa",
+          website:"Hatun web p'anqa",websiteSub:"Oficial webta qaway",
+          human:"Llamk'aqkunawan rimay",humanSub:"WhatsApp nisqapi qatipay",
+          security:"Imaraykun mana IA gastanchu?",securitySub:"Amachayta qaway",other:"Huk llamk'ayta akllay.",
+          menuAsk:"Ima simipin mikhuna qillqata qawayta, PDFpi uraykachiyta munanki?",menuAskDesc:"Oficial mikhuna qillqan simiman tikran, chaymanta PDFpi waqaychayta saqin.",
+          menuSelected:"{language} simipi mikhuna qillqaman yaykuyta wakichirqani.",menuGuideTitle:"{language} simipi mikhuna qillqa",menuGuideDesc:"Qhawaypaq chaymanta PDFpi waqaychanapaq tatkikuna.",
+          stepOpen:"Oficial mikhuna qillqata musuq pestañapi kichay.",stepLanguage:"Hana barrapi {language} simita akllay.",stepDownload:"“Descargar PDF” nisqata ñit'iy, chaymanta tikrasqa qillqata waqaychay utaq imprimiy.",
+          menuTruth:"Kunan mikhuna qillqa kikin web p'anqapin tikrakun. Manaraqmi sapa simipaq huk PDF t'inkisqa kanchu.",
+          quechuaWarning:"Runasimiman kikillan tikrasqa qillqa, qhatuypaq apaykachakunanpaq, runasimi yachaq runawan qhawachiy.",
+          openMenu:"Achka simiyuq mikhuna qillqata kichay ↗",chooseOther:"Huk simita akllay",back:"Kutiy",
+          pricesText:"Kunan oficial chaninkuna mikhuna qillqapi kachkan. Botqa manan chaninkunata copiaykuchu, ama ñawpa chaninta rikuchinanpaq.",
+          hoursText:"Willakusqa pacha: sapa p'unchaw 12:00 pachamanta 22:00 pachakama.",
+          locationText:"Emiliana Restaurant Cultural Buffet\nAv. Tullumayo 235 · Cusco 08002",
+          websiteText:"Kaymi Emiliana Restaurante Buffet Cultural Cusco-pa oficial web p'anqan.",
+          humanText:"Reservas llamk'aqkunawan WhatsApp nisqapi rimayta atinki: +51 951 520 753.",
+          openWebsite:"Oficial webta kichay ↗",openMap:"Maypi kasqaykuta kichay ↗",openWhatsapp:"WhatsAppta kichay ↗",infoSource:"Oficial willakuy",
+          reserveStart:"Reserva malliyta qallarisun. Manan imapas waqaychasqachu nitaq apachisqachu kanqa.",
+          visitTitle:"Watukuypa willakuynin",visitDesc:"1/3 tatki · Yant'a willakuyta churay.",people:"Hayk'a runakuna",service:"Ima yanapakuy",select:"Akllay",
+          serviceBuffet:"Buffet cultural",serviceTable:"Misa waqaychay",serviceGroup:"Huñu utaq evento",continue:"Qatipay",required:"Qatipanaykipaq ch'usaq k'uchukunata hunt'achiy.",
+          dateMessage:"Kunan p'unchawta chaymanta pachata akllay.",dateTitle:"P'unchaw chaymanta pacha",dateDesc:"2/3 tatki · Cheqaq disponibilidadta manan qhawanchu.",date:"P'unchaw",time:"Pacha",
+          contactMessage:"Yant'a contacto willakuyta hunt'achiy.",contactTitle:"Contacto chaymanta detalles",contactDesc:"3/3 tatki · Kay pestañallapin willakuy kachkan.",
+          name:"Suti",phone:"Telefono",email:"Correo (munaspa)",notes:"Alergia, mikhuy hark'ay utaq willakuy",review:"Reservata qhaway",
+          reviewMessage:"Malliyta takyachinaykipaq llapanta qhaway.",reviewTitle:"Reservapa pisillapi willakuynin",reviewDesc:"Takyachiyqa manan cheqaq reservata ruwanchu.",confirm:"Malliyta takyachiy",simulated:"MALLISQA",noData:"Mana willakusqa",
+          successMessage:"Malliyqa allintan tukurqan. Manan cheqaq reserva ruwasqachu.",successTitle:"Reserva malliy tukusqa",successText:"Código DEMO-EMI-0001 · OpenAI-pi S/ 0 gastasqa.",tryAnother:"Huk llamk'ayta malliy",
+          securityText:"Kay laboratorioqa local kamachikunawan, ñawpaqmantan wakichisqa kutichiykunawan llamk'an. OpenAI, datos waqaychana, formulariokuna chaymanta conexiones nisqata hark'an.",
+          securityTitle:"Gasto amachay",api:"OpenAI API",database:"Datos waqaychana",automaticNetwork:"Qhipa conexiones",disabled:"Wichq'asqa",blocked:"Hark'asqa",localMemory:"Pisi pacha yuyaylla",
+          prompts:["Runasimipi mikhuna qillqata uraykachiyta munani","Ima pachakunapin kichasqa?","I want to reserve a table"],
+          unknown:"Manan kikin wakichisqa kutichiyta tarirqanichu. Mikhuna qillqa, simikuna, chaninkuna, pacha, maypi kasqayku, web, WhatsApp utaq reserva malliywan yanapasqayki.",
+          languageChanged:"Allinmi. Runasimipi qatipasqayki.",greeting:"Rimaykullayki! Huk akllanata ñit'iy utaq imata munasqaykita qillqay."
         }
+      };
 
-        function addMessage(role, text) {
-          const wrapper = document.createElement("div");
-          wrapper.className = "message " + (role === "user" ? "message--user" : "message--bot");
+      const el = {
+        messages:document.getElementById("messages"),
+        interactive:document.getElementById("interactiveCard"),
+        input:document.getElementById("messageInput"),
+        send:document.getElementById("sendMessage"),
+        reset:document.getElementById("resetDemo"),
+        languageList:document.getElementById("languageList"),
+        promptList:document.getElementById("promptList")
+      };
+      const state = {uiLang:"es",menuLang:"qu",reservation:{}};
 
-          const avatar = document.createElement("span");
-          avatar.className = "message-avatar";
-          avatar.setAttribute("aria-hidden", "true");
-          avatar.textContent = role === "user" ? "TÚ" : "E";
+      function t(key){return COPY[state.uiLang][key] == null ? COPY.es[key] : COPY[state.uiLang][key]}
+      function esc(value){return String(value == null ? "" : value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+      function format(template,values){return String(template).replace(/\{(\w+)\}/g,function(_,key){return values[key] == null ? "" : values[key]})}
+      function norm(value){return String(value||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9ñ\s'’]/g," ").replace(/\s+/g," ").trim()}
 
-          const bubble = document.createElement("div");
-          bubble.className = "bubble";
-          bubble.textContent = text;
+      function addMessage(role,text){
+        const wrap=document.createElement("div");
+        wrap.className="message "+(role==="user"?"message--user":"message--bot");
+        const avatar=document.createElement("span");avatar.className="msg-avatar";avatar.setAttribute("aria-hidden","true");avatar.textContent=role==="user"?"TÚ":"E";
+        const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=text;
+        wrap.append(avatar,bubble);el.messages.appendChild(wrap);el.messages.scrollTop=el.messages.scrollHeight;
+      }
+      function setCard(markup){
+        el.interactive.innerHTML=markup;
+        const first=el.interactive.querySelector("button,input,select,textarea,a");
+        if(first)window.setTimeout(function(){first.focus({preventScroll:true})},0);
+      }
+      function externalLink(href,label,kind){return '<a class="link-button '+(kind||"primary")+'" href="'+href+'" target="_blank" rel="noopener noreferrer">'+esc(label)+"</a>"}
+      function activeLanguage(){return UI_LANGUAGES.find(function(item){return item.code===state.uiLang})||UI_LANGUAGES[0]}
 
-          wrapper.append(avatar, bubble);
-          messages.appendChild(wrapper);
-          messages.scrollTop = messages.scrollHeight;
-        }
-
-        function userChoice(label) {
-          addMessage("user", label);
-        }
-
-        function setCard(markup) {
-          interactive.innerHTML = markup;
-          const firstControl = interactive.querySelector("button, input, select, textarea");
-          if (firstControl) {
-            window.setTimeout(function () {
-              firstControl.focus({ preventScroll: true });
-            }, 0);
-          }
-        }
-
-        function requiredValue(id, errorId) {
-          const element = document.getElementById(id);
-          const value = element ? element.value.trim() : "";
-          if (!value) {
-            const error = document.getElementById(errorId);
-            if (error) error.textContent = "Completa los campos obligatorios para continuar.";
-            if (element) element.focus();
-            return null;
-          }
-          return value;
-        }
-
-        function todayValue() {
-          const now = new Date();
-          const offset = now.getTimezoneOffset();
-          return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10);
-        }
-
-        function maskPhone(value) {
-          const clean = String(value || "").replace(/\s+/g, "");
-          if (clean.length <= 4) return clean;
-          return "••••••" + clean.slice(-4);
-        }
-
-        function summaryRow(label, value) {
-          return '<div class="summary-row"><span>' + escapeText(label) + '</span><span>' +
-            escapeText(value || "No indicado") + "</span></div>";
-        }
-
-        function renderHome(options) {
-          const config = options || {};
-          if (!config.keepMessages) {
-            messages.innerHTML = "";
-            addMessage("bot", "¡Hola! Soy el asistente oficial del Buffet Emiliana. Esta es una demostración sin inteligencia artificial. ¿Qué deseas probar?");
-          } else {
-            addMessage("bot", "Elige otra función para continuar probando.");
-          }
-
-          setCard(
-            '<section class="card" aria-labelledby="homeTitle">' +
-              '<div class="card-head"><div><h2 id="homeTitle">¿Qué deseas hacer?</h2>' +
-              '<p class="card-description">Todos los resultados de esta pantalla son simulados.</p></div>' +
-              '<span class="step-badge">DEMO</span></div>' +
-              '<div class="quick-grid">' +
-                '<button class="choice" type="button" data-action="reserve">Reservar una mesa<small>Prueba los 4 pasos y la confirmación</small></button>' +
-                '<button class="choice" type="button" data-action="info">Información del buffet<small>Precios, horarios, ubicación y más</small></button>' +
-                '<button class="choice" type="button" data-action="manage">Gestionar mi reserva<small>Consulta, modificación y cancelación simuladas</small></button>' +
-                '<button class="choice" type="button" data-action="group">Grupo o evento<small>Registra una solicitud de demostración</small></button>' +
-                '<button class="choice" type="button" data-action="handoff">Hablar con el equipo<small>Prueba la derivación humana</small></button>' +
-                '<button class="choice" type="button" data-action="security">¿Por qué no gasta IA?<small>Revisa la protección técnica</small></button>' +
-              '</div>' +
-            '</section>'
-          );
-
-          interactive.querySelectorAll("[data-action]").forEach(function (button) {
-            button.addEventListener("click", function () {
-              const action = button.dataset.action;
-              userChoice(button.firstChild.textContent.trim());
-              if (action === "reserve") reservationStepOne();
-              if (action === "info") renderInfoTopics();
-              if (action === "manage") renderManageMenu();
-              if (action === "group") groupStep();
-              if (action === "handoff") handoffStep();
-              if (action === "security") renderSecurity();
-            });
-          });
-        }
-
-        function cardBack(handler) {
-          const button = interactive.querySelector("[data-back]");
-          if (button) button.addEventListener("click", handler);
-        }
-
-        function reservationStepOne() {
-          addMessage("bot", "Empecemos por el tipo de visita y el número de personas.");
-          setCard(
-            '<section class="card" aria-labelledby="reservationOneTitle">' +
-              '<div class="card-head"><div><h2 id="reservationOneTitle">Tu visita</h2>' +
-              '<p class="card-description">Usa datos ficticios para la prueba.</p></div><span class="step-badge">1 de 4</span></div>' +
-              '<div class="progress" aria-label="Progreso 25%"><span style="width:25%"></span></div>' +
-              '<div class="fields">' +
-                '<div class="field"><label for="partySize">Número de personas <span>*</span></label>' +
-                '<input id="partySize" type="number" min="1" max="200" inputmode="numeric" value="' + escapeText(state.reservation.partySize || "") + '"></div>' +
-                '<div class="field"><label for="serviceType">Tipo de servicio <span>*</span></label>' +
-                '<select id="serviceType"><option value="">Selecciona</option>' +
-                '<option value="[Ejemplo] Buffet">[Ejemplo] Buffet</option>' +
-                '<option value="[Ejemplo] Reserva de mesa">[Ejemplo] Reserva de mesa</option>' +
-                '<option value="[Ejemplo] Grupo o evento">[Ejemplo] Grupo o evento</option></select>' +
-                '<span class="field-help">Las opciones reales vendrán de la configuración oficial.</span></div>' +
-              '</div><p class="error" id="reservationOneError" role="alert"></p>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button>' +
-              '<button class="button button--primary" type="button" id="reservationOneNext">Continuar</button></div>' +
-            '</section>'
-          );
-          if (state.reservation.serviceType) {
-            document.getElementById("serviceType").value = state.reservation.serviceType;
-          }
-          document.getElementById("reservationOneNext").addEventListener("click", function () {
-            const partySize = requiredValue("partySize", "reservationOneError");
-            const serviceType = requiredValue("serviceType", "reservationOneError");
-            if (!partySize || !serviceType) return;
-            state.reservation.partySize = partySize;
-            state.reservation.serviceType = serviceType;
-            reservationStepTwo();
-          });
-          cardBack(function () { renderHome({ keepMessages: true }); });
-        }
-
-        function reservationStepTwo() {
-          addMessage("bot", "Ahora elige una fecha y una hora de demostración.");
-          setCard(
-            '<section class="card" aria-labelledby="reservationTwoTitle">' +
-              '<div class="card-head"><div><h2 id="reservationTwoTitle">Fecha y hora</h2>' +
-              '<p class="card-description">No se consulta disponibilidad real.</p></div><span class="step-badge">2 de 4</span></div>' +
-              '<div class="progress" aria-label="Progreso 50%"><span style="width:50%"></span></div>' +
-              '<div class="fields">' +
-                '<div class="field"><label for="reservationDate">Fecha <span>*</span></label>' +
-                '<input id="reservationDate" type="date" min="' + todayValue() + '" value="' + escapeText(state.reservation.date || "") + '"></div>' +
-                '<div class="field"><label for="reservationTime">Hora solicitada <span>*</span></label>' +
-                '<input id="reservationTime" type="time" value="' + escapeText(state.reservation.time || "") + '">' +
-                '<span class="field-help">En producción, el sistema deberá confirmar el horario.</span></div>' +
-              '</div><p class="error" id="reservationTwoError" role="alert"></p>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
-              '<button class="button button--primary" type="button" id="reservationTwoNext">Continuar</button></div>' +
-            '</section>'
-          );
-          document.getElementById("reservationTwoNext").addEventListener("click", function () {
-            const date = requiredValue("reservationDate", "reservationTwoError");
-            const time = requiredValue("reservationTime", "reservationTwoError");
-            if (!date || !time) return;
-            state.reservation.date = date;
-            state.reservation.time = time;
-            reservationStepThree();
-          });
-          cardBack(reservationStepOne);
-        }
-
-        function reservationStepThree() {
-          addMessage("bot", "Completa datos ficticios de contacto. Nada se guardará.");
-          setCard(
-            '<section class="card" aria-labelledby="reservationThreeTitle">' +
-              '<div class="card-head"><div><h2 id="reservationThreeTitle">Datos de contacto</h2>' +
-              '<p class="card-description">No uses información sensible en esta prueba.</p></div><span class="step-badge">3 de 4</span></div>' +
-              '<div class="progress" aria-label="Progreso 75%"><span style="width:75%"></span></div>' +
-              '<div class="fields">' +
-                '<div class="field field--full"><label for="customerName">Nombre de prueba <span>*</span></label>' +
-                '<input id="customerName" type="text" maxlength="120" autocomplete="off" placeholder="Ejemplo: Cliente Prueba" value="' + escapeText(state.reservation.name || "") + '"></div>' +
-                '<div class="field"><label for="customerPhone">Teléfono ficticio <span>*</span></label>' +
-                '<input id="customerPhone" type="tel" maxlength="30" autocomplete="off" placeholder="+51 900 000 000" value="' + escapeText(state.reservation.phone || "") + '"></div>' +
-                '<div class="field"><label for="customerEmail">Correo ficticio</label>' +
-                '<input id="customerEmail" type="email" maxlength="254" autocomplete="off" placeholder="prueba@ejemplo.test" value="' + escapeText(state.reservation.email || "") + '"></div>' +
-              '</div><p class="error" id="reservationThreeError" role="alert"></p>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
-              '<button class="button button--primary" type="button" id="reservationThreeNext">Continuar</button></div>' +
-            '</section>'
-          );
-          document.getElementById("reservationThreeNext").addEventListener("click", function () {
-            const name = requiredValue("customerName", "reservationThreeError");
-            const phone = requiredValue("customerPhone", "reservationThreeError");
-            if (!name || !phone) return;
-            state.reservation.name = name;
-            state.reservation.phone = phone;
-            state.reservation.email = document.getElementById("customerEmail").value.trim();
-            reservationStepFour();
-          });
-          cardBack(reservationStepTwo);
-        }
-
-        function reservationStepFour() {
-          addMessage("bot", "Puedes agregar restricciones y observaciones, o dejar los cuadros vacíos.");
-          setCard(
-            '<section class="card" aria-labelledby="reservationFourTitle">' +
-              '<div class="card-head"><div><h2 id="reservationFourTitle">Detalles opcionales</h2>' +
-              '<p class="card-description">El equipo debe confirmar cualquier manejo de alérgenos.</p></div><span class="step-badge">4 de 4</span></div>' +
-              '<div class="progress" aria-label="Progreso 100%"><span style="width:100%"></span></div>' +
-              '<div class="fields">' +
-                '<div class="field field--full"><label for="dietary">Alergias o restricciones</label>' +
-                '<textarea id="dietary" maxlength="500" placeholder="Ejemplo de prueba">' + escapeText(state.reservation.dietary || "") + '</textarea></div>' +
-                '<div class="field field--full"><label for="notes">Observaciones</label>' +
-                '<textarea id="notes" maxlength="1000" placeholder="Ejemplo de prueba">' + escapeText(state.reservation.notes || "") + '</textarea></div>' +
-              '</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
-              '<button class="button button--primary" type="button" id="reservationReview">Revisar reserva</button></div>' +
-            '</section>'
-          );
-          document.getElementById("reservationReview").addEventListener("click", function () {
-            state.reservation.dietary = document.getElementById("dietary").value.trim();
-            state.reservation.notes = document.getElementById("notes").value.trim();
-            reservationSummary();
-          });
-          cardBack(reservationStepThree);
-        }
-
-        function reservationSummary() {
-          addMessage("bot", "Revisa el resumen. Confirmar solo ejecutará una simulación local.");
-          setCard(
-            '<section class="card" aria-labelledby="reservationSummaryTitle">' +
-              '<div class="card-head"><div><h2 id="reservationSummaryTitle">Confirma tu reserva de prueba</h2>' +
-              '<p class="card-description">Ninguno de estos datos será enviado.</p></div><span class="step-badge">RESUMEN</span></div>' +
-              '<div class="summary">' +
-                summaryRow("Servicio", state.reservation.serviceType) +
-                summaryRow("Personas", state.reservation.partySize) +
-                summaryRow("Fecha", state.reservation.date) +
-                summaryRow("Hora", state.reservation.time) +
-                summaryRow("Nombre", state.reservation.name) +
-                summaryRow("Teléfono", maskPhone(state.reservation.phone)) +
-                summaryRow("Correo", state.reservation.email) +
-                summaryRow("Restricciones", state.reservation.dietary) +
-                summaryRow("Observaciones", state.reservation.notes) +
-              '</div>' +
-              '<div class="demo-notice"><strong>Simulación segura:</strong> el botón no guarda, no envía y no utiliza inteligencia artificial.</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Editar</button>' +
-              '<button class="button button--primary" type="button" id="confirmReservation">Confirmar simulación</button></div>' +
-            '</section>'
-          );
-          document.getElementById("confirmReservation").addEventListener("click", reservationSuccess);
-          cardBack(reservationStepOne);
-        }
-
-        function reservationSuccess() {
-          userChoice("Confirmar simulación");
-          addMessage("bot", "La demostración se completó. No se creó ninguna reserva real.");
-          setCard(
-            '<section class="card" aria-labelledby="reservationSuccessTitle">' +
-              '<div class="card-head"><div><h2 id="reservationSuccessTitle">Prueba completada</h2>' +
-              '<p class="card-description">Resultado local del laboratorio.</p></div><span class="step-badge">✓ DEMO</span></div>' +
-              '<div class="success-box"><strong>Código: DEMO-EMI-0001</strong>No se guardó ninguna reserva y no se consumió saldo de OpenAI.</div>' +
-              '<div class="actions"><button class="button button--primary" type="button" id="returnHome">Probar otra función</button></div>' +
-            '</section>'
-          );
-          document.getElementById("returnHome").addEventListener("click", function () {
-            renderHome({ keepMessages: true });
-          });
-        }
-
-        function renderInfoTopics() {
-          addMessage("bot", "Selecciona la información que deseas visualizar.");
-          const buttons = Object.keys(infoTopics).map(function (key) {
-            return '<button class="choice" type="button" data-topic="' + key + '">' +
-              escapeText(infoTopics[key].title) + '<small>Respuesta pregrabada segura</small></button>';
-          }).join("");
-          setCard(
-            '<section class="card" aria-labelledby="infoTitle">' +
-              '<div class="card-head"><div><h2 id="infoTitle">Información oficial</h2>' +
-              '<p class="card-description">El laboratorio no consulta datos reales.</p></div><span class="step-badge">CUADROS</span></div>' +
-              '<div class="topic-grid">' + buttons + '</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button></div>' +
-            '</section>'
-          );
-          interactive.querySelectorAll("[data-topic]").forEach(function (button) {
-            button.addEventListener("click", function () {
-              userChoice(infoTopics[button.dataset.topic].title);
-              renderInfoAnswer(button.dataset.topic);
-            });
-          });
-          cardBack(function () { renderHome({ keepMessages: true }); });
-        }
-
-        function renderInfoAnswer(topicKey) {
-          const topic = infoTopics[topicKey];
-          addMessage("bot", topic.text);
-          setCard(
-            '<section class="card" aria-labelledby="answerTitle">' +
-              '<div class="card-head"><div><h2 id="answerTitle">' + escapeText(topic.title) + '</h2>' +
-              '<p class="card-description">Fuente de demostración</p></div><span class="step-badge">NO VERIFICADO</span></div>' +
-              '<div class="demo-notice">' + escapeText(topic.text) + '</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" id="moreInfo">Más información</button>' +
-              '<button class="button button--primary" type="button" id="fromInfoReserve">Probar reserva</button></div>' +
-            '</section>'
-          );
-          document.getElementById("moreInfo").addEventListener("click", renderInfoTopics);
-          document.getElementById("fromInfoReserve").addEventListener("click", reservationStepOne);
-        }
-
-        function renderManageMenu() {
-          addMessage("bot", "Puedes probar la consulta, modificación o cancelación sin tocar una reserva real.");
-          setCard(
-            '<section class="card" aria-labelledby="manageTitle">' +
-              '<div class="card-head"><div><h2 id="manageTitle">Gestionar reserva</h2>' +
-              '<p class="card-description">La búsqueda siempre será simulada.</p></div><span class="step-badge">DEMO</span></div>' +
-              '<div class="quick-grid">' +
-                '<button class="choice" type="button" data-manage="status">Consultar estado<small>Muestra una reserva de ejemplo</small></button>' +
-                '<button class="choice" type="button" data-manage="modify">Modificar reserva<small>Prueba antes y después</small></button>' +
-                '<button class="choice" type="button" data-manage="cancel">Cancelar reserva<small>Prueba confirmación sensible</small></button>' +
-              '</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button></div>' +
-            '</section>'
-          );
-          interactive.querySelectorAll("[data-manage]").forEach(function (button) {
-            button.addEventListener("click", function () {
-              const labels = { status: "Consultar estado", modify: "Modificar reserva", cancel: "Cancelar reserva" };
-              userChoice(labels[button.dataset.manage]);
-              manageLookup(button.dataset.manage);
-            });
-          });
-          cardBack(function () { renderHome({ keepMessages: true }); });
-        }
-
-        function manageLookup(mode) {
-          addMessage("bot", "Ingresa cualquier código ficticio y un dato de verificación.");
-          setCard(
-            '<section class="card" aria-labelledby="lookupTitle">' +
-              '<div class="card-head"><div><h2 id="lookupTitle">Verifica tu reserva</h2>' +
-              '<p class="card-description">No se realizará ninguna consulta externa.</p></div><span class="step-badge">SEGURA</span></div>' +
-              '<div class="fields">' +
-                '<div class="field"><label for="demoCode">Código ficticio <span>*</span></label><input id="demoCode" type="text" value="DEMO-1234" maxlength="80"></div>' +
-                '<div class="field"><label for="demoVerify">Dato de verificación <span>*</span></label><input id="demoVerify" type="text" value="0000" maxlength="80"></div>' +
-              '</div><p class="error" id="lookupError" role="alert"></p>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
-              '<button class="button button--primary" type="button" id="runLookup">Buscar demostración</button></div>' +
-            '</section>'
-          );
-          document.getElementById("runLookup").addEventListener("click", function () {
-            const code = requiredValue("demoCode", "lookupError");
-            const verify = requiredValue("demoVerify", "lookupError");
-            if (!code || !verify) return;
-            state.management.code = code;
-            if (mode === "status") manageStatus();
-            if (mode === "modify") manageModify();
-            if (mode === "cancel") manageCancel();
-          });
-          cardBack(renderManageMenu);
-        }
-
-        function demoReservationRows() {
-          return summaryRow("Código", state.management.code || "DEMO-1234") +
-            summaryRow("Estado", "Confirmada · ejemplo") +
-            summaryRow("Fecha", "Fecha simulada") +
-            summaryRow("Hora", "Hora simulada") +
-            summaryRow("Personas", "4 · ejemplo");
-        }
-
-        function manageStatus() {
-          addMessage("bot", "Este es un resultado ficticio para revisar el diseño del cuadro de estado.");
-          setCard(
-            '<section class="card" aria-labelledby="statusTitle">' +
-              '<div class="card-head"><div><h2 id="statusTitle">Estado de la reserva</h2>' +
-              '<p class="card-description">Resultado de demostración</p></div><span class="step-badge">SIMULADO</span></div>' +
-              '<div class="summary">' + demoReservationRows() + '</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" id="manageAgain">Volver a gestionar</button>' +
-              '<button class="button button--primary" type="button" id="statusHome">Inicio</button></div>' +
-            '</section>'
-          );
-          document.getElementById("manageAgain").addEventListener("click", renderManageMenu);
-          document.getElementById("statusHome").addEventListener("click", function () { renderHome({ keepMessages: true }); });
-        }
-
-        function manageModify() {
-          addMessage("bot", "Indica un cambio de ejemplo y revísalo antes de confirmar.");
-          setCard(
-            '<section class="card" aria-labelledby="modifyTitle">' +
-              '<div class="card-head"><div><h2 id="modifyTitle">Modificar reserva</h2>' +
-              '<p class="card-description">Cambio de demostración</p></div><span class="step-badge">SIMULADO</span></div>' +
-              '<div class="fields">' +
-                '<div class="field"><label for="newDate">Nueva fecha <span>*</span></label><input id="newDate" type="date" min="' + todayValue() + '"></div>' +
-                '<div class="field"><label for="newPeople">Nuevo número de personas <span>*</span></label><input id="newPeople" type="number" min="1" max="200" value="5"></div>' +
-              '</div><p class="error" id="modifyError" role="alert"></p>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Atrás</button>' +
-              '<button class="button button--primary" type="button" id="reviewModify">Revisar cambio</button></div>' +
-            '</section>'
-          );
-          document.getElementById("reviewModify").addEventListener("click", function () {
-            const date = requiredValue("newDate", "modifyError");
-            const people = requiredValue("newPeople", "modifyError");
-            if (!date || !people) return;
-            state.management.newDate = date;
-            state.management.newPeople = people;
-            confirmModify();
-          });
-          cardBack(renderManageMenu);
-        }
-
-        function confirmModify() {
-          addMessage("bot", "Confirma solo si el antes y el después están correctos.");
-          setCard(
-            '<section class="card" aria-labelledby="confirmModifyTitle">' +
-              '<div class="card-head"><div><h2 id="confirmModifyTitle">Confirma los cambios</h2>' +
-              '<p class="card-description">No se modificará ningún registro.</p></div><span class="step-badge">CONFIRMACIÓN</span></div>' +
-              '<div class="summary">' +
-                summaryRow("Antes", "Fecha y 4 personas · ejemplo") +
-                summaryRow("Después", state.management.newDate + " · " + state.management.newPeople + " personas") +
-              '</div>' +
-              '<div class="demo-notice">Esta confirmación solo cambia la pantalla actual.</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Editar</button>' +
-              '<button class="button button--primary" type="button" id="applyModify">Confirmar simulación</button></div>' +
-            '</section>'
-          );
-          document.getElementById("applyModify").addEventListener("click", function () {
-            userChoice("Confirmar modificación simulada");
-            addMessage("bot", "Modificación simulada correctamente. La reserva real no cambió.");
-            demoOperationSuccess("Modificación de prueba completada");
-          });
-          cardBack(manageModify);
-        }
-
-        function manageCancel() {
-          addMessage("bot", "La cancelación exige una confirmación clara. Este cuadro no cancela nada real.");
-          setCard(
-            '<section class="card" aria-labelledby="cancelTitle">' +
-              '<div class="card-head"><div><h2 id="cancelTitle">¿Cancelar esta reserva?</h2>' +
-              '<p class="card-description">Confirmación sensible de demostración</p></div><span class="step-badge">ATENCIÓN</span></div>' +
-              '<div class="summary">' + demoReservationRows() + '</div>' +
-              '<div class="danger-box"><strong>Solo prueba:</strong> confirmar no modifica ni elimina registros.</div>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>No, mantener</button>' +
-              '<button class="button button--danger" type="button" id="confirmCancel">Sí, simular cancelación</button></div>' +
-            '</section>'
-          );
-          document.getElementById("confirmCancel").addEventListener("click", function () {
-            userChoice("Simular cancelación");
-            addMessage("bot", "Cancelación simulada. No se modificó ninguna reserva.");
-            demoOperationSuccess("Cancelación de prueba completada");
-          });
-          cardBack(renderManageMenu);
-        }
-
-        function demoOperationSuccess(title) {
-          setCard(
-            '<section class="card" aria-labelledby="operationTitle">' +
-              '<div class="card-head"><div><h2 id="operationTitle">' + escapeText(title) + '</h2>' +
-              '<p class="card-description">Resultado local</p></div><span class="step-badge">✓ DEMO</span></div>' +
-              '<div class="success-box"><strong>No hubo cambios reales</strong>No se llamó a la API, a la base de datos ni a OpenAI.</div>' +
-              '<div class="actions"><button class="button button--primary" type="button" id="operationHome">Probar otra función</button></div>' +
-            '</section>'
-          );
-          document.getElementById("operationHome").addEventListener("click", function () { renderHome({ keepMessages: true }); });
-        }
-
-        function groupStep() {
-          addMessage("bot", "Completa una solicitud ficticia para grupo o evento.");
-          setCard(
-            '<section class="card" aria-labelledby="groupTitle">' +
-              '<div class="card-head"><div><h2 id="groupTitle">Grupo o evento</h2>' +
-              '<p class="card-description">Una solicitud no equivale a una reserva confirmada.</p></div><span class="step-badge">DEMO</span></div>' +
-              '<div class="fields">' +
-                '<div class="field"><label for="groupType">Tipo <span>*</span></label><select id="groupType"><option value="">Selecciona</option><option>[Ejemplo] Grupo turístico</option><option>[Ejemplo] Celebración</option><option>[Ejemplo] Evento</option></select></div>' +
-                '<div class="field"><label for="groupPeople">Personas estimadas <span>*</span></label><input id="groupPeople" type="number" min="1" max="500"></div>' +
-                '<div class="field"><label for="groupDate">Fecha preferida <span>*</span></label><input id="groupDate" type="date" min="' + todayValue() + '"></div>' +
-                '<div class="field"><label for="groupContact">Contacto ficticio <span>*</span></label><input id="groupContact" type="text" maxlength="120" placeholder="Cliente Prueba"></div>' +
-                '<div class="field field--full"><label for="groupDetails">¿Qué necesitas?</label><textarea id="groupDetails" maxlength="1500" placeholder="Describe un caso ficticio"></textarea></div>' +
-              '</div><p class="error" id="groupError" role="alert"></p>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button>' +
-              '<button class="button button--primary" type="button" id="sendGroup">Simular envío</button></div>' +
-            '</section>'
-          );
-          document.getElementById("sendGroup").addEventListener("click", function () {
-            const type = requiredValue("groupType", "groupError");
-            const people = requiredValue("groupPeople", "groupError");
-            const date = requiredValue("groupDate", "groupError");
-            const contact = requiredValue("groupContact", "groupError");
-            if (!type || !people || !date || !contact) return;
-            userChoice("Enviar solicitud de demostración");
-            addMessage("bot", "Solicitud simulada. El equipo no recibió datos reales.");
-            demoOperationSuccess("Solicitud de grupo simulada");
-          });
-          cardBack(function () { renderHome({ keepMessages: true }); });
-        }
-
-        function handoffStep() {
-          addMessage("bot", "Prueba cómo se presentaría una derivación a una persona del equipo.");
-          setCard(
-            '<section class="card" aria-labelledby="handoffTitle">' +
-              '<div class="card-head"><div><h2 id="handoffTitle">Hablar con el equipo</h2>' +
-              '<p class="card-description">No se enviará ningún mensaje real.</p></div><span class="step-badge">DEMO</span></div>' +
-              '<div class="fields">' +
-                '<div class="field"><label for="handoffCategory">Motivo <span>*</span></label><select id="handoffCategory"><option value="">Selecciona</option><option>Reserva</option><option>Información</option><option>Grupo o evento</option><option>Comentario</option></select></div>' +
-                '<div class="field"><label for="handoffContact">Contacto ficticio <span>*</span></label><input id="handoffContact" type="text" maxlength="120" placeholder="900 000 000"></div>' +
-                '<div class="field field--full"><label for="handoffMessage">Mensaje <span>*</span></label><textarea id="handoffMessage" maxlength="1500" placeholder="Escribe una consulta ficticia"></textarea></div>' +
-              '</div><p class="error" id="handoffError" role="alert"></p>' +
-              '<div class="actions"><button class="button button--secondary" type="button" data-back>Volver</button>' +
-              '<button class="button button--primary" type="button" id="sendHandoff">Simular derivación</button></div>' +
-            '</section>'
-          );
-          document.getElementById("sendHandoff").addEventListener("click", function () {
-            const category = requiredValue("handoffCategory", "handoffError");
-            const contact = requiredValue("handoffContact", "handoffError");
-            const message = requiredValue("handoffMessage", "handoffError");
-            if (!category || !contact || !message) return;
-            userChoice("Enviar consulta de demostración");
-            addMessage("bot", "Derivación simulada. No se avisó a ninguna persona ni se almacenaron datos.");
-            demoOperationSuccess("Derivación de prueba completada");
-          });
-          cardBack(function () { renderHome({ keepMessages: true }); });
-        }
-
-        function renderSecurity() {
-          addMessage("bot", "La protección no depende solo de una promesa: la ruta impide técnicamente las conexiones salientes.");
-          setCard(
-            '<section class="card" aria-labelledby="securityTitle">' +
-              '<div class="card-head"><div><h2 id="securityTitle">Protección de consumo</h2>' +
-              '<p class="card-description">Cómo funciona este laboratorio</p></div><span class="step-badge">S/ 0 IA</span></div>' +
-              '<div class="summary">' +
-                summaryRow("API de OpenAI", "No conectada") +
-                summaryRow("Base de datos", "No conectada") +
-                summaryRow("Reservas reales", "Desactivadas") +
-                summaryRow("Solicitudes externas", "Bloqueadas") +
-                summaryRow("Almacenamiento", "Solo memoria temporal") +
-              '</div>' +
-              '<div class="success-box"><strong>Uso seguro</strong>Puedes pulsar todos los botones de esta página: únicamente cambian elementos de la pantalla.</div>' +
-              '<div class="actions"><button class="button button--primary" type="button" id="securityHome">Entendido, seguir probando</button></div>' +
-            '</section>'
-          );
-          document.getElementById("securityHome").addEventListener("click", function () {
-            renderHome({ keepMessages: true });
-          });
-        }
-
-        resetButton.addEventListener("click", function () {
-          state.reservation = {};
-          state.management = {};
-          state.group = {};
-          state.handoff = {};
-          renderHome();
+      function applyCopy(){
+        document.documentElement.lang=state.uiLang;
+        document.getElementById("labTitle").textContent=t("labTitle");
+        document.getElementById("labLead").textContent=t("labLead");
+        document.getElementById("costText").textContent=t("costText");
+        document.getElementById("languageLabel").textContent=t("languageLabel");
+        document.getElementById("tryLabel").textContent=t("tryLabel");
+        document.getElementById("safeNote").textContent=t("safeNote");
+        document.getElementById("activeLanguage").textContent=activeLanguage().short;
+        el.reset.textContent=t("reset");el.input.placeholder=t("placeholder");el.send.textContent=t("send");
+        document.getElementById("chatFoot").textContent=t("foot");
+        renderLanguageButtons();renderPrompts();
+      }
+      function renderLanguageButtons(){
+        el.languageList.innerHTML=UI_LANGUAGES.map(function(lang){
+          return '<button class="lang-btn" type="button" data-ui-lang="'+lang.code+'" aria-pressed="'+(state.uiLang===lang.code)+'"><span>'+lang.short+"</span>"+esc(lang.name)+"</button>";
+        }).join("");
+        el.languageList.querySelectorAll("[data-ui-lang]").forEach(function(button){
+          button.addEventListener("click",function(){changeLanguage(button.dataset.uiLang,true)});
         });
+      }
+      function renderPrompts(){
+        el.promptList.innerHTML=t("prompts").map(function(prompt){return '<button class="prompt" type="button" data-prompt="'+esc(prompt)+'">'+esc(prompt)+"</button>"}).join("");
+        el.promptList.querySelectorAll("[data-prompt]").forEach(function(button){button.addEventListener("click",function(){submitText(button.dataset.prompt)})});
+      }
+      function changeLanguage(lang,announce){
+        if(!COPY[lang])return;
+        state.uiLang=lang;applyCopy();
+        if(announce){addMessage("bot",t("languageChanged"));renderHome(true)}
+      }
 
-        renderHome();
-      })();
-    </script>
-  </body>
+      function renderHome(keep){
+        if(!keep){el.messages.innerHTML="";addMessage("bot",t("welcome"))}else addMessage("bot",t("other"));
+        const actions=[
+          ["menu","▤",t("menu"),t("menuSub")],["reserve","◫",t("reserve"),t("reserveSub")],
+          ["prices","S/",t("prices"),t("pricesSub")],["hours","◷",t("hours"),t("hoursSub")],
+          ["location","⌖",t("location"),t("locationSub")],["website","↗",t("website"),t("websiteSub")],
+          ["human","◇",t("human"),t("humanSub")],["security","◎",t("security"),t("securitySub")]
+        ];
+        setCard('<section class="card" aria-labelledby="homeTitle"><div class="card-head"><div><h2 id="homeTitle">'+esc(t("choose"))+'</h2><p class="desc">'+esc(t("chooseDesc"))+'</p></div><span class="badge">'+esc(t("demo"))+'</span></div><div class="action-grid">'+actions.map(function(a){return '<button class="choice" type="button" data-action="'+a[0]+'"><span class="choice-icon">'+a[1]+"</span>"+esc(a[2])+"<small>"+esc(a[3])+"</small></button>"}).join("")+"</div></section>");
+        el.interactive.querySelectorAll("[data-action]").forEach(function(button){
+          button.addEventListener("click",function(){addMessage("user",button.childNodes[1].textContent.trim());runAction(button.dataset.action)});
+        });
+      }
+      function runAction(action){
+        if(action==="menu")renderMenuLanguages();
+        if(action==="reserve")reservationOne();
+        if(["prices","hours","location","website","human"].includes(action))renderInfo(action);
+        if(action==="security")renderSecurity();
+      }
+      function backHome(){renderHome(true)}
+      function bindBack(handler){const button=el.interactive.querySelector("[data-back]");if(button)button.addEventListener("click",handler||backHome)}
+
+      function renderMenuLanguages(){
+        addMessage("bot",t("menuAsk"));
+        setCard('<section class="card" aria-labelledby="menuLangTitle"><div class="card-head"><div><h2 id="menuLangTitle">'+esc(t("menuAsk"))+'</h2><p class="desc">'+esc(t("menuAskDesc"))+'</p></div><span class="badge">8 IDIOMAS</span></div><div class="menu-languages">'+MENU_LANGUAGES.map(function(lang){return '<button class="choice menu-lang" type="button" data-menu-lang="'+lang.code+'"><strong>'+esc(lang.name)+"</strong><span>"+esc(lang.native)+"</span></button>"}).join("")+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+"</button></div></section>");
+        el.interactive.querySelectorAll("[data-menu-lang]").forEach(function(button){button.addEventListener("click",function(){renderMenuGuide(button.dataset.menuLang)})});
+        bindBack();
+      }
+      function menuLanguage(code){return MENU_LANGUAGES.find(function(item){return item.code===code})||MENU_LANGUAGES[0]}
+      function renderMenuGuide(code){
+        state.menuLang=code;
+        const lang=menuLanguage(code);
+        addMessage("user",lang.name+" · "+lang.native);
+        addMessage("bot",format(t("menuSelected"),{language:lang.native}));
+        setCard('<section class="card" aria-labelledby="guideTitle"><div class="card-head"><div><h2 id="guideTitle">'+esc(format(t("menuGuideTitle"),{language:lang.native}))+'</h2><p class="desc">'+esc(t("menuGuideDesc"))+'</p></div><span class="badge">PDF · '+esc(lang.code.toUpperCase())+'</span></div><ol class="steps"><li class="step"><span class="step-number">01</span><span>'+esc(t("stepOpen"))+'</span></li><li class="step"><span class="step-number">02</span><span>'+esc(format(t("stepLanguage"),{language:lang.native}))+'</span></li><li class="step"><span class="step-number">03</span><span>'+esc(t("stepDownload"))+'</span></li></ol><div class="notice"><strong>Transparencia:</strong> '+esc(t("menuTruth"))+'</div>'+(code==="qu"?'<div class="warning"><strong>Runasimi:</strong> '+esc(t("quechuaWarning"))+"</div>":"")+'<div class="actions"><button class="button secondary" type="button" id="otherMenuLang">'+esc(t("chooseOther"))+"</button>"+externalLink(LINKS.menu,t("openMenu"),"primary")+"</div></section>");
+        document.getElementById("otherMenuLang").addEventListener("click",renderMenuLanguages);
+      }
+
+      function renderInfo(type){
+        const cfg={
+          prices:{title:t("prices"),text:t("pricesText"),link:LINKS.menu,label:t("openMenu")},
+          hours:{title:t("hours"),text:t("hoursText")},
+          location:{title:t("location"),text:t("locationText"),link:LINKS.maps,label:t("openMap")},
+          website:{title:t("website"),text:t("websiteText"),link:LINKS.website,label:t("openWebsite")},
+          human:{title:t("human"),text:t("humanText"),link:LINKS.whatsapp,label:t("openWhatsapp")}
+        }[type];
+        addMessage("bot",cfg.text);
+        setCard('<section class="card" aria-labelledby="infoTitle"><div class="card-head"><div><h2 id="infoTitle">'+esc(cfg.title)+'</h2><p class="desc">'+esc(t("infoSource"))+'</p></div><span class="badge">OFICIAL</span></div><div class="notice">'+esc(cfg.text)+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+"</button>"+(cfg.link?externalLink(cfg.link,cfg.label,"primary"):"")+"</div></section>");
+        bindBack();
+      }
+
+      function today(){
+        const now=new Date(),offset=now.getTimezoneOffset();
+        return new Date(now.getTime()-offset*60000).toISOString().slice(0,10);
+      }
+      function required(id,errorId){
+        const input=document.getElementById(id),value=input?input.value.trim():"";
+        if(!value){const error=document.getElementById(errorId);if(error)error.textContent=t("required");if(input)input.focus();return null}
+        return value;
+      }
+      function reservationOne(){
+        addMessage("bot",t("reserveStart"));
+        setCard('<section class="card" aria-labelledby="visitTitle"><div class="card-head"><div><h2 id="visitTitle">'+esc(t("visitTitle"))+'</h2><p class="desc">'+esc(t("visitDesc"))+'</p></div><span class="badge">1 / 3</span></div><div class="progress"><span style="width:33%"></span></div><div class="fields"><div class="field"><label for="partySize">'+esc(t("people"))+' <span>*</span></label><input id="partySize" type="number" min="1" max="200" inputmode="numeric" value="'+esc(state.reservation.people||"")+'"></div><div class="field"><label for="serviceType">'+esc(t("service"))+' <span>*</span></label><select id="serviceType"><option value="">'+esc(t("select"))+'</option><option value="buffet">'+esc(t("serviceBuffet"))+'</option><option value="table">'+esc(t("serviceTable"))+'</option><option value="group">'+esc(t("serviceGroup"))+'</option></select></div></div><p class="error" id="visitError" role="alert"></p><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="visitNext">'+esc(t("continue"))+"</button></div></section>");
+        if(state.reservation.service)document.getElementById("serviceType").value=state.reservation.service;
+        document.getElementById("visitNext").addEventListener("click",function(){
+          const people=required("partySize","visitError"),service=required("serviceType","visitError");
+          if(!people||!service)return;state.reservation.people=people;state.reservation.service=service;reservationTwo();
+        });bindBack();
+      }
+      function reservationTwo(){
+        addMessage("bot",t("dateMessage"));
+        setCard('<section class="card" aria-labelledby="dateTitle"><div class="card-head"><div><h2 id="dateTitle">'+esc(t("dateTitle"))+'</h2><p class="desc">'+esc(t("dateDesc"))+'</p></div><span class="badge">2 / 3</span></div><div class="progress"><span style="width:66%"></span></div><div class="fields"><div class="field"><label for="resDate">'+esc(t("date"))+' <span>*</span></label><input id="resDate" type="date" min="'+today()+'" value="'+esc(state.reservation.date||"")+'"></div><div class="field"><label for="resTime">'+esc(t("time"))+' <span>*</span></label><input id="resTime" type="time" value="'+esc(state.reservation.time||"")+'"></div></div><p class="error" id="dateError" role="alert"></p><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="dateNext">'+esc(t("continue"))+"</button></div></section>");
+        document.getElementById("dateNext").addEventListener("click",function(){
+          const date=required("resDate","dateError"),time=required("resTime","dateError");
+          if(!date||!time)return;state.reservation.date=date;state.reservation.time=time;reservationThree();
+        });bindBack(reservationOne);
+      }
+      function reservationThree(){
+        addMessage("bot",t("contactMessage"));
+        setCard('<section class="card" aria-labelledby="contactTitle"><div class="card-head"><div><h2 id="contactTitle">'+esc(t("contactTitle"))+'</h2><p class="desc">'+esc(t("contactDesc"))+'</p></div><span class="badge">3 / 3</span></div><div class="progress"><span style="width:100%"></span></div><div class="fields"><div class="field"><label for="customerName">'+esc(t("name"))+' <span>*</span></label><input id="customerName" type="text" maxlength="120" autocomplete="off" value="'+esc(state.reservation.name||"")+'"></div><div class="field"><label for="customerPhone">'+esc(t("phone"))+' <span>*</span></label><input id="customerPhone" type="tel" maxlength="30" autocomplete="off" value="'+esc(state.reservation.phone||"")+'"></div><div class="field full"><label for="customerEmail">'+esc(t("email"))+'</label><input id="customerEmail" type="email" maxlength="254" autocomplete="off" value="'+esc(state.reservation.email||"")+'"></div><div class="field full"><label for="customerNotes">'+esc(t("notes"))+'</label><textarea id="customerNotes" maxlength="800">'+esc(state.reservation.notes||"")+'</textarea></div></div><p class="error" id="contactError" role="alert"></p><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="reviewRes">'+esc(t("review"))+"</button></div></section>");
+        document.getElementById("reviewRes").addEventListener("click",function(){
+          const name=required("customerName","contactError"),phone=required("customerPhone","contactError");
+          if(!name||!phone)return;
+          state.reservation.name=name;state.reservation.phone=phone;
+          state.reservation.email=document.getElementById("customerEmail").value.trim();
+          state.reservation.notes=document.getElementById("customerNotes").value.trim();
+          reservationReview();
+        });bindBack(reservationTwo);
+      }
+      function serviceName(value){return value==="buffet"?t("serviceBuffet"):value==="table"?t("serviceTable"):t("serviceGroup")}
+      function summaryRow(label,value){return '<div class="row"><span>'+esc(label)+'</span><span>'+esc(value||t("noData"))+"</span></div>"}
+      function maskPhone(value){const clean=String(value||"").replace(/\s+/g,"");return clean.length>4?"••••••"+clean.slice(-4):clean}
+      function reservationReview(){
+        addMessage("bot",t("reviewMessage"));
+        setCard('<section class="card" aria-labelledby="reviewTitle"><div class="card-head"><div><h2 id="reviewTitle">'+esc(t("reviewTitle"))+'</h2><p class="desc">'+esc(t("reviewDesc"))+'</p></div><span class="badge">'+esc(t("simulated"))+'</span></div><div class="summary">'+summaryRow(t("service"),serviceName(state.reservation.service))+summaryRow(t("people"),state.reservation.people)+summaryRow(t("date"),state.reservation.date)+summaryRow(t("time"),state.reservation.time)+summaryRow(t("name"),state.reservation.name)+summaryRow(t("phone"),maskPhone(state.reservation.phone))+summaryRow(t("email"),state.reservation.email)+summaryRow(t("notes"),state.reservation.notes)+'</div><div class="success">'+esc(t("reviewDesc"))+'</div><div class="actions"><button class="button secondary" type="button" data-back>'+esc(t("back"))+'</button><button class="button primary" type="button" id="confirmRes">'+esc(t("confirm"))+"</button></div></section>");
+        document.getElementById("confirmRes").addEventListener("click",reservationSuccess);bindBack(reservationThree);
+      }
+      function reservationSuccess(){
+        addMessage("user",t("confirm"));addMessage("bot",t("successMessage"));
+        setCard('<section class="card" aria-labelledby="successTitle"><div class="card-head"><div><h2 id="successTitle">'+esc(t("successTitle"))+'</h2><p class="desc">DEMO-EMI-0001</p></div><span class="badge">✓ '+esc(t("simulated"))+'</span></div><div class="success"><strong>'+esc(t("successText"))+'</strong></div><div class="actions"><button class="button primary" type="button" id="tryAnother">'+esc(t("tryAnother"))+"</button></div></section>");
+        document.getElementById("tryAnother").addEventListener("click",backHome);
+      }
+      function renderSecurity(){
+        addMessage("bot",t("securityText"));
+        setCard('<section class="card" aria-labelledby="securityTitle"><div class="card-head"><div><h2 id="securityTitle">'+esc(t("securityTitle"))+'</h2><p class="desc">S/ 0 OpenAI</p></div><span class="badge">VERIFICADO</span></div><div class="summary">'+summaryRow(t("api"),t("disabled"))+summaryRow(t("database"),t("disabled"))+summaryRow(t("automaticNetwork"),t("blocked"))+summaryRow("Memoria",t("localMemory"))+'</div><div class="success">'+esc(t("securityText"))+'</div><div class="actions"><button class="button primary" type="button" data-back>'+esc(t("back"))+"</button></div></section>");
+        bindBack();
+      }
+
+      function targetMenuLang(text){
+        const patterns={qu:/\b(quechua|runasimi|runa simi)\b/,en:/\b(ingles|english)\b/,es:/\b(espanol|castellano|spanish)\b/,pt:/\b(portugues|portuguese)\b/,fr:/\b(frances|french|francais)\b/,de:/\b(aleman|german|deutsch)\b/,it:/\b(italiano|italian)\b/,zh:/\b(chino|chinese|mandarin)\b/};
+        return Object.keys(patterns).find(function(key){return patterns[key].test(text)})||null;
+      }
+      function conversationLang(text){
+        if(/\b(rimaykullayki|mikhuna|hayk'a|maypi|runasimi|munani|uraykachiy)\b/.test(text))return"qu";
+        if(/\b(hello|hi|please|menu|price|prices|reserve|reservation|opening hours|where are you|download|website)\b/.test(text))return"en";
+        return null;
+      }
+      function handleTyped(raw){
+        const text=norm(raw),menuLang=targetMenuLang(text),detected=conversationLang(text);
+        const asksMenu=/\b(carta|menu|pdf|descargar|download|uraykachiy|mikhuna qillqa)\b/.test(text);
+        if(detected&&detected!==state.uiLang){state.uiLang=detected;applyCopy()}
+        if(asksMenu){if(menuLang)renderMenuGuide(menuLang);else renderMenuLanguages();return}
+        if(/\b(reserv|mesa|table|misa waqaychay|wakichiy)\b/.test(text)){reservationOne();return}
+        if(/\b(precio|precios|price|prices|costo|cost|chani|chaninkuna)\b/.test(text)){renderInfo("prices");return}
+        if(/\b(horario|horarios|hora de atencion|opening hours|open|close|pacha|kichasqa)\b/.test(text)){renderInfo("hours");return}
+        if(/\b(donde|ubicacion|direccion|location|address|where|maypi)\b/.test(text)){renderInfo("location");return}
+        if(/\b(pagina|sitio web|website|web oficial|web p'anqa)\b/.test(text)){renderInfo("website");return}
+        if(/\b(whatsapp|persona|asesor|equipo|human|staff|team|llamk'aq)\b/.test(text)){renderInfo("human");return}
+        if(/\b(openai|inteligencia artificial|artificial intelligence|saldo|gasta|consume|ia|api)\b/.test(text)){renderSecurity();return}
+        if(/^(espanol|spanish|castellano)$/.test(text)){changeLanguage("es",true);return}
+        if(/^(ingles|english)$/.test(text)){changeLanguage("en",true);return}
+        if(/^(quechua|runasimi|runa simi)$/.test(text)){changeLanguage("qu",true);return}
+        if(/\b(hola|buenos dias|buenas|hello|hi|rimaykullayki)\b/.test(text)){addMessage("bot",t("greeting"));renderHome(true);return}
+        addMessage("bot",t("unknown"));renderHome(true);
+      }
+      function submitText(value){
+        const raw=String(value==null?el.input.value:value).trim();
+        if(!raw){el.input.focus();return}
+        addMessage("user",raw);el.input.value="";handleTyped(raw);
+      }
+      el.send.addEventListener("click",function(){submitText()});
+      el.input.addEventListener("keydown",function(event){if(event.key==="Enter"&&!event.isComposing){event.preventDefault();submitText()}});
+      el.reset.addEventListener("click",function(){state.uiLang="es";state.menuLang="qu";state.reservation={};applyCopy();renderHome(false)});
+
+      applyCopy();renderHome(false);
+    })();
+  </script>
+</body>
 </html>
